@@ -1,4 +1,4 @@
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+function _get() { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get.bind(); } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(arguments.length < 3 ? target : receiver); } return desc.value; }; } return _get.apply(this, arguments); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
@@ -12,11 +12,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _toArray(arr) { return _arrayWithHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableRest(); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
-function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct.bind(); } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -26,27 +26,27 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _createClass2(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass2(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -686,9 +686,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var DomAdapter = function DomAdapter() {
+    var DomAdapter =
+    /*#__PURE__*/
+    _createClass2(function DomAdapter() {
       _classCallCheck(this, DomAdapter);
-    };
+    });
 
     if (false) {}
     /**
@@ -739,9 +741,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @abstract
      */
 
-    var PlatformLocation = function PlatformLocation() {
+    var PlatformLocation =
+    /*#__PURE__*/
+    _createClass2(function PlatformLocation() {
       _classCallCheck(this, PlatformLocation);
-    };
+    });
 
     PlatformLocation.ɵfac = function PlatformLocation_Factory(t) {
       return new (t || PlatformLocation)();
@@ -1197,9 +1201,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var LocationStrategy = function LocationStrategy() {
+    var LocationStrategy =
+    /*#__PURE__*/
+    _createClass2(function LocationStrategy() {
       _classCallCheck(this, LocationStrategy);
-    };
+    });
 
     LocationStrategy.ɵfac = function LocationStrategy_Factory(t) {
       return new (t || LocationStrategy)();
@@ -4728,9 +4734,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var NgLocalization = function NgLocalization() {
+    var NgLocalization =
+    /*#__PURE__*/
+    _createClass2(function NgLocalization() {
       _classCallCheck(this, NgLocalization);
-    };
+    });
 
     if (false) {}
     /**
@@ -5995,6 +6003,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
     var RecordViewTuple =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} record
      * @param {?} view
@@ -6004,7 +6014,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       this.record = record;
       this.view = view;
-    };
+    });
 
     if (false) {}
     /**
@@ -6345,7 +6355,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var NgIfContext = function NgIfContext() {
+    var NgIfContext =
+    /*#__PURE__*/
+    _createClass2(function NgIfContext() {
       _classCallCheck(this, NgIfContext);
 
       this.$implicit =
@@ -6354,7 +6366,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.ngIf =
       /** @type {?} */
       null;
-    };
+    });
 
     if (false) {}
     /**
@@ -6779,6 +6791,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
     var NgSwitchDefault =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} viewContainer
      * @param {?} templateRef
@@ -6788,7 +6802,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _classCallCheck(this, NgSwitchDefault);
 
       ngSwitch._addDefault(new SwitchView(viewContainer, templateRef));
-    };
+    });
 
     NgSwitchDefault.ɵfac = function NgSwitchDefault_Factory(t) {
       return new (t || NgSwitchDefault)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewContainerRef"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["TemplateRef"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](NgSwitch, 1));
@@ -7025,6 +7039,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
     var NgPluralCase =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} value
      * @param {?} template
@@ -7039,7 +7055,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       var isANumber = !isNaN(Number(value));
       ngPlural.addCase(isANumber ? "=".concat(value) : value, new SwitchView(viewContainer, template));
-    };
+    });
 
     NgPluralCase.ɵfac = function NgPluralCase_Factory(t) {
       return new (t || NgPluralCase)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinjectAttribute"]('ngPluralCase'), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["TemplateRef"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewContainerRef"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](NgPlural, 1));
@@ -9378,9 +9394,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * \@publicApi
      */
 
-    var CommonModule = function CommonModule() {
+    var CommonModule =
+    /*#__PURE__*/
+    _createClass2(function CommonModule() {
       _classCallCheck(this, CommonModule);
-    };
+    });
 
     CommonModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({
       type: CommonModule
@@ -9513,9 +9531,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @abstract
      */
 
-    var ViewportScroller = function ViewportScroller() {
+    var ViewportScroller =
+    /*#__PURE__*/
+    _createClass2(function ViewportScroller() {
       _classCallCheck(this, ViewportScroller);
-    }; // De-sugared tree-shakable injection
+    }); // De-sugared tree-shakable injection
     // See #23917
 
     /** @nocollapse */
@@ -13835,9 +13855,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var NgModuleRef = function NgModuleRef() {
+    var NgModuleRef =
+    /*#__PURE__*/
+    _createClass2(function NgModuleRef() {
       _classCallCheck(this, NgModuleRef);
-    };
+    });
 
     if (false) {}
     /**
@@ -13856,9 +13878,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var NgModuleFactory = function NgModuleFactory() {
+    var NgModuleFactory =
+    /*#__PURE__*/
+    _createClass2(function NgModuleFactory() {
       _classCallCheck(this, NgModuleFactory);
-    };
+    });
 
     if (false) {}
     /**
@@ -17328,6 +17352,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
     var NodeInjectorFactory =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} factory
      * @param {?} isViewProvider
@@ -17349,7 +17375,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.resolving = false;
       this.canSeeViewProviders = isViewProvider;
       this.injectImpl = injectImplementation;
-    };
+    });
 
     if (false) {}
     /**
@@ -17487,8 +17513,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (value !== 0
           /* NamespaceURI */
           ) {
-              break;
-            } // we just landed on the marker value ... therefore
+            break;
+          } // we just landed on the marker value ... therefore
           // we should skip to the next entry
 
 
@@ -17614,18 +17640,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             if (srcMarker === 0
             /* NamespaceURI */
             ) {// Case where we need to consume `key1`, `key2`, `value` items.
-              } else if (srcMarker === -1
+            } else if (srcMarker === -1
             /* ImplicitAttributes */
             || srcMarker === 2
             /* Styles */
             ) {
-                // Case where we have to consume `key1` and `value` only.
-                mergeHostAttribute(dst, srcMarker,
-                /** @type {?} */
-                item, null,
-                /** @type {?} */
-                src[++i]);
-              } else {
+              // Case where we have to consume `key1` and `value` only.
+              mergeHostAttribute(dst, srcMarker,
+              /** @type {?} */
+              item, null,
+              /** @type {?} */
+              src[++i]);
+            } else {
               // Case where we have to consume `key1` only.
               mergeHostAttribute(dst, srcMarker,
               /** @type {?} */
@@ -17660,8 +17686,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (marker === -1
       /* ImplicitAttributes */
       ) {
-          markerInsertPosition = -1;
-        } else {
+        markerInsertPosition = -1;
+      } else {
         while (i < dst.length) {
           /** @type {?} */
           var dstValue = dst[i++];
@@ -18281,12 +18307,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (value === 0
           /* NamespaceURI */
           ) {
-              // we skip the next two values
-              // as namespaced attributes looks like
-              // [..., AttributeMarker.NamespaceURI, 'http://someuri.com/test', 'test:exist',
-              // 'existValue', ...]
-              i = i + 2;
-            } else if (typeof value === 'number') {
+            // we skip the next two values
+            // as namespaced attributes looks like
+            // [..., AttributeMarker.NamespaceURI, 'http://someuri.com/test', 'test:exist',
+            // 'existValue', ...]
+            i = i + 2;
+          } else if (typeof value === 'number') {
             // Skip to the first value of the marked attribute.
             i++;
 
@@ -20752,14 +20778,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (mode & 1
       /* ValidateProperty */
       ) {
-          doSanitizeValue = stylePropNeedsSanitization(prop);
-        }
+        doSanitizeValue = stylePropNeedsSanitization(prop);
+      }
 
       if (mode & 2
       /* SanitizeOnly */
       ) {
-          return doSanitizeValue ? ɵɵsanitizeStyle(value) : unwrapSafeValue(value);
-        } else {
+        return doSanitizeValue ? ɵɵsanitizeStyle(value) : unwrapSafeValue(value);
+      } else {
         return doSanitizeValue;
       }
     };
@@ -22002,18 +22028,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (foundIndex === 0 || className.charCodeAt(foundIndex - 1) <= 32
         /* SPACE */
         ) {
-            // Ensure that it has leading whitespace
+          // Ensure that it has leading whitespace
 
-            /** @type {?} */
-            var length = classToSearch.length;
+          /** @type {?} */
+          var length = classToSearch.length;
 
-            if (foundIndex + length === end || className.charCodeAt(foundIndex + length) <= 32
-            /* SPACE */
-            ) {
-                // Ensure that it has trailing whitespace
-                return foundIndex;
-              }
-          } // False positive, keep searching from where we left off.
+          if (foundIndex + length === end || className.charCodeAt(foundIndex + length) <= 32
+          /* SPACE */
+          ) {
+            // Ensure that it has trailing whitespace
+            return foundIndex;
+          }
+        } // False positive, keep searching from where we left off.
 
 
         startingIndex = foundIndex + 1;
@@ -22067,14 +22093,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         } else if (item === 1
         /* Classes */
         ) {
-            // We found the classes section. Start searching for the class.
-            while (i < attrs.length && typeof (item = attrs[i++]) == 'string') {
-              // while we have strings
-              if (item.toLowerCase() === cssClassToMatch) return true;
-            }
-
-            return false;
+          // We found the classes section. Start searching for the class.
+          while (i < attrs.length && typeof (item = attrs[i++]) == 'string') {
+            // while we have strings
+            if (item.toLowerCase() === cssClassToMatch) return true;
           }
+
+          return false;
+        }
       }
 
       return false;
@@ -22174,17 +22200,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (mode & 4
         /* ELEMENT */
         ) {
-            mode = 2
-            /* ATTRIBUTE */
-            | mode & 1
-            /* NOT */
-            ;
+          mode = 2
+          /* ATTRIBUTE */
+          | mode & 1
+          /* NOT */
+          ;
 
-            if (current !== '' && !hasTagAndTypeMatch(tNode, current, isProjectionMode) || current === '' && selector.length === 1) {
-              if (isPositive(mode)) return false;
-              skipToNextSelector = true;
-            }
-          } else {
+          if (current !== '' && !hasTagAndTypeMatch(tNode, current, isProjectionMode) || current === '' && selector.length === 1) {
+            if (isPositive(mode)) return false;
+            skipToNextSelector = true;
+          }
+        } else {
           /** @type {?} */
           var selectorAttrValue = mode & 8
           /* CLASS */
@@ -22321,33 +22347,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           || maybeAttrName === 6
           /* I18n */
           ) {
-              bindingsMode = true;
-            } else if (maybeAttrName === 1
+            bindingsMode = true;
+          } else if (maybeAttrName === 1
           /* Classes */
           || maybeAttrName === 2
           /* Styles */
           ) {
-              /** @type {?} */
-              var value = attrs[++i]; // We should skip classes here because we have a separate mechanism for
-              // matching classes in projection mode.
+            /** @type {?} */
+            var value = attrs[++i]; // We should skip classes here because we have a separate mechanism for
+            // matching classes in projection mode.
 
-              while (typeof value === 'string') {
-                value = attrs[++i];
-              }
+            while (typeof value === 'string') {
+              value = attrs[++i];
+            }
 
-              continue;
-            } else if (maybeAttrName === 4
+            continue;
+          } else if (maybeAttrName === 4
           /* Template */
           ) {
-              // We do not care about Template attributes in this scenario.
-              break;
-            } else if (maybeAttrName === 0
+            // We do not care about Template attributes in this scenario.
+            break;
+          } else if (maybeAttrName === 0
           /* NamespaceURI */
           ) {
-              // Skip the whole namespaced attribute and value. This is by design.
-              i += 4;
-              continue;
-            } // In binding mode there are only names, rather than name-value pairs.
+            // Skip the whole namespaced attribute and value. This is by design.
+            i += 4;
+            continue;
+          } // In binding mode there are only names, rather than name-value pairs.
 
 
           i += bindingsMode ? 1 : 2;
@@ -22524,20 +22550,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (mode & 2
           /* ATTRIBUTE */
           ) {
-              /** @type {?} */
-              var attrValue =
-              /** @type {?} */
-              selector[++i];
-              currentChunk += '[' + valueOrMarker + (attrValue.length > 0 ? '="' + attrValue + '"' : '') + ']';
-            } else if (mode & 8
+            /** @type {?} */
+            var attrValue =
+            /** @type {?} */
+            selector[++i];
+            currentChunk += '[' + valueOrMarker + (attrValue.length > 0 ? '="' + attrValue + '"' : '') + ']';
+          } else if (mode & 8
           /* CLASS */
           ) {
-              currentChunk += '.' + valueOrMarker;
-            } else if (mode & 4
+            currentChunk += '.' + valueOrMarker;
+          } else if (mode & 4
           /* ELEMENT */
           ) {
-              currentChunk += ' ' + valueOrMarker;
-            }
+            currentChunk += ' ' + valueOrMarker;
+          }
         } else {
           //
           // Append current chunk to the final result in case we come across SelectorFlag, which
@@ -22628,16 +22654,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (mode === 2
           /* ATTRIBUTE */
           ) {
-              if (valueOrMarker !== '') {
-                attrs.push(valueOrMarker,
-                /** @type {?} */
-                selector[++i]);
-              }
-            } else if (mode === 8
+            if (valueOrMarker !== '') {
+              attrs.push(valueOrMarker,
+              /** @type {?} */
+              selector[++i]);
+            }
+          } else if (mode === 8
           /* CLASS */
           ) {
-              classes.push(valueOrMarker);
-            }
+            classes.push(valueOrMarker);
+          }
         } else {
           // According to CssSelector spec, once we come across `SelectorFlags.NOT` flag, the negative
           // mode is maintained for remaining chunks of a selector. Since attributes and classes are
@@ -25747,13 +25773,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (lView[FLAGS] & 1024
         /* RefreshTransplantedView */
         ) {
-            lView[FLAGS] &= ~1024
-            /* RefreshTransplantedView */
-            ;
-            updateTransplantedViewCount(
-            /** @type {?} */
-            lView[PARENT], -1);
-          }
+          lView[FLAGS] &= ~1024
+          /* RefreshTransplantedView */
+          ;
+          updateTransplantedViewCount(
+          /** @type {?} */
+          lView[PARENT], -1);
+        }
       } finally {
         leaveView();
       }
@@ -25876,8 +25902,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       ) === 128
       /* hasHostBindings */
       ) {
-          invokeDirectivesHostBindings(tView, lView, tNode);
-        }
+        invokeDirectivesHostBindings(tView, lView, tNode);
+      }
     }
     /**
      * Takes a list of local names and indices and pushes the resolved local variable values
@@ -26406,47 +26432,47 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       } else if (tNode.type === 3
       /* Element */
       ) {
-          propName = mapPropName(propName);
+        propName = mapPropName(propName);
 
-          if (ngDevMode) {
-            validateAgainstEventProperties(propName);
+        if (ngDevMode) {
+          validateAgainstEventProperties(propName);
 
-            if (!validateProperty(tView, lView, element, propName, tNode)) {
-              // Return here since we only log warnings for unknown properties.
-              warnAboutUnknownProperty(propName, tNode);
-              return;
-            }
-
-            ngDevMode.rendererSetProperty++;
-          } // It is assumed that the sanitizer is only added when the compiler determines that the
-          // property is risky, so sanitization can be done without further checks.
-
-
-          value = sanitizer != null ?
-          /** @type {?} */
-          sanitizer(value, tNode.tagName || '', propName) : value;
-
-          if (isProceduralRenderer(renderer)) {
-            renderer.setProperty(
-            /** @type {?} */
-            element, propName, value);
-          } else if (!isAnimationProp(propName)) {
-            /** @type {?} */
-            element.setProperty ?
-            /** @type {?} */
-            element.setProperty(propName, value) :
-            /** @type {?} */
-            element[propName] = value;
+          if (!validateProperty(tView, lView, element, propName, tNode)) {
+            // Return here since we only log warnings for unknown properties.
+            warnAboutUnknownProperty(propName, tNode);
+            return;
           }
-        } else if (tNode.type === 0
+
+          ngDevMode.rendererSetProperty++;
+        } // It is assumed that the sanitizer is only added when the compiler determines that the
+        // property is risky, so sanitization can be done without further checks.
+
+
+        value = sanitizer != null ?
+        /** @type {?} */
+        sanitizer(value, tNode.tagName || '', propName) : value;
+
+        if (isProceduralRenderer(renderer)) {
+          renderer.setProperty(
+          /** @type {?} */
+          element, propName, value);
+        } else if (!isAnimationProp(propName)) {
+          /** @type {?} */
+          element.setProperty ?
+          /** @type {?} */
+          element.setProperty(propName, value) :
+          /** @type {?} */
+          element[propName] = value;
+        }
+      } else if (tNode.type === 0
       /* Container */
       ) {
-          // If the node is a container and the property didn't
-          // match any of the inputs or schemas we should throw.
-          if (ngDevMode && !matchingSchemas(tView, lView, tNode.tagName)) {
-            warnAboutUnknownProperty(propName, tNode);
-          }
+        // If the node is a container and the property didn't
+        // match any of the inputs or schemas we should throw.
+        if (ngDevMode && !matchingSchemas(tView, lView, tNode.tagName)) {
+          warnAboutUnknownProperty(propName, tNode);
         }
+      }
     }
     /**
      * If node is an OnPush component, marks its LView dirty.
@@ -26491,20 +26517,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (type === 3
       /* Element */
       ) {
-          if (value == null) {
-            isProceduralRenderer(renderer) ? renderer.removeAttribute(
-            /** @type {?} */
-            element, attrName) :
-            /** @type {?} */
-            element.removeAttribute(attrName);
-          } else {
-            isProceduralRenderer(renderer) ? renderer.setAttribute(
-            /** @type {?} */
-            element, attrName, debugValue) :
-            /** @type {?} */
-            element.setAttribute(attrName, debugValue);
-          }
+        if (value == null) {
+          isProceduralRenderer(renderer) ? renderer.removeAttribute(
+          /** @type {?} */
+          element, attrName) :
+          /** @type {?} */
+          element.removeAttribute(attrName);
         } else {
+          isProceduralRenderer(renderer) ? renderer.setAttribute(
+          /** @type {?} */
+          element, attrName, debugValue) :
+          /** @type {?} */
+          element.setAttribute(attrName, debugValue);
+        }
+      } else {
         /** @type {?} */
         var textContent = escapeCommentText("bindings=".concat(JSON.stringify(_defineProperty({}, attrName, debugValue), null, 2)));
 
@@ -26534,20 +26560,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       || type === 0
       /* Container */
       ) {
-          /**
-           * dataValue is an array containing runtime input or output names for the directives:
-           * i+0: directive instance index
-           * i+1: privateName
-           *
-           * e.g. [0, 'change', 'change-minified']
-           * we want to set the reflected property with the privateName: dataValue[i+1]
-           */
-          for (var i = 0; i < dataValue.length; i += 2) {
-            setNgReflectProperty(lView, element, type,
-            /** @type {?} */
-            dataValue[i + 1], value);
-          }
+        /**
+         * dataValue is an array containing runtime input or output names for the directives:
+         * i+0: directive instance index
+         * i+1: privateName
+         *
+         * e.g. [0, 'change', 'change-minified']
+         * we want to set the reflected property with the privateName: dataValue[i+1]
+         */
+        for (var i = 0; i < dataValue.length; i += 2) {
+          setNgReflectProperty(lView, element, type,
+          /** @type {?} */
+          dataValue[i + 1], value);
         }
+      }
     }
     /**
      * @param {?} tView
@@ -27287,16 +27313,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (attrName === 0
         /* NamespaceURI */
         ) {
-            // We do not allow inputs on namespaced attributes.
-            i += 4;
-            continue;
-          } else if (attrName === 5
+          // We do not allow inputs on namespaced attributes.
+          i += 4;
+          continue;
+        } else if (attrName === 5
         /* ProjectAs */
         ) {
-            // Skip over the `ngProjectAs` value.
-            i += 2;
-            continue;
-          } // If we hit any other attribute markers, we're done anyway. None of those are valid inputs.
+          // Skip over the `ngProjectAs` value.
+          i += 2;
+          continue;
+        } // If we hit any other attribute markers, we're done anyway. None of those are valid inputs.
 
 
         if (typeof attrName === 'number') break;
@@ -27480,13 +27506,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (embeddedLView[FLAGS] & 1024
           /* RefreshTransplantedView */
           ) {
-              /** @type {?} */
-              var embeddedTView = embeddedLView[TVIEW];
-              ngDevMode && assertDefined(embeddedTView, 'TView must be allocated');
-              refreshView(embeddedTView, embeddedLView, embeddedTView.template,
-              /** @type {?} */
-              embeddedLView[CONTEXT]);
-            } else if (embeddedLView[TRANSPLANTED_VIEWS_TO_REFRESH] > 0) {
+            /** @type {?} */
+            var embeddedTView = embeddedLView[TVIEW];
+            ngDevMode && assertDefined(embeddedTView, 'TView must be allocated');
+            refreshView(embeddedTView, embeddedLView, embeddedTView.template,
+            /** @type {?} */
+            embeddedLView[CONTEXT]);
+          } else if (embeddedLView[TRANSPLANTED_VIEWS_TO_REFRESH] > 0) {
             refreshContainsDirtyView(embeddedLView);
           }
         }
@@ -27671,26 +27697,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (rootContext.flags & 1
           /* DetectChanges */
           ) {
-              rootContext.flags &= ~1
-              /* DetectChanges */
-              ;
-              tickRootContext(rootContext);
-            }
+            rootContext.flags &= ~1
+            /* DetectChanges */
+            ;
+            tickRootContext(rootContext);
+          }
 
           if (rootContext.flags & 2
           /* FlushPlayers */
           ) {
-              rootContext.flags &= ~2
-              /* FlushPlayers */
-              ;
-              /** @type {?} */
+            rootContext.flags &= ~2
+            /* FlushPlayers */
+            ;
+            /** @type {?} */
 
-              var playerHandler = rootContext.playerHandler;
+            var playerHandler = rootContext.playerHandler;
 
-              if (playerHandler) {
-                playerHandler.flushPlayers();
-              }
+            if (playerHandler) {
+              playerHandler.flushPlayers();
             }
+          }
 
           rootContext.clean = _CLEAN_PROMISE;
 
@@ -28116,17 +28142,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         } else if (action === 2
         /* Detach */
         ) {
-            nativeRemoveNode(renderer, rNode, isComponent);
-          } else if (action === 3
+          nativeRemoveNode(renderer, rNode, isComponent);
+        } else if (action === 3
         /* Destroy */
         ) {
-            ngDevMode && ngDevMode.rendererDestroyNode++;
+          ngDevMode && ngDevMode.rendererDestroyNode++;
 
-            /** @type {?} */
+          /** @type {?} */
 
-            /** @type {?} */
-            renderer.destroyNode(rNode);
-          }
+          /** @type {?} */
+          renderer.destroyNode(rNode);
+        }
 
         if (lContainer != null) {
           applyContainer(renderer, action, lContainer, parent, beforeNode);
@@ -28392,8 +28418,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (lView[FLAGS] & 1024
       /* RefreshTransplantedView */
       ) {
-          updateTransplantedViewCount(insertionLContainer, -1);
-        }
+        updateTransplantedViewCount(insertionLContainer, -1);
+      }
 
       movedViews.splice(declarationViewIndex, 1);
     }
@@ -28516,12 +28542,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (isLView(lViewOrLContainer) && (tNode = lViewOrLContainer[T_HOST]) && tNode.type === 2
       /* View */
       ) {
-          // if it's an embedded view, the state needs to go up to the container, in case the
-          // container has a next
-          return getLContainer(
-          /** @type {?} */
-          tNode, lViewOrLContainer);
-        } else {
+        // if it's an embedded view, the state needs to go up to the container, in case the
+        // container has a next
+        return getLContainer(
+        /** @type {?} */
+        tNode, lViewOrLContainer);
+      } else {
         // otherwise, use parent view for containers or component views
         return lViewOrLContainer[PARENT] === rootView ? null : lViewOrLContainer[PARENT];
       }
@@ -28734,17 +28760,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (hostTNode.type === 2
         /* View */
         ) {
-            // We are inserting a root element of an embedded view We might delay insertion of children
-            // for a given view if it is disconnected. This might happen for 2 main reasons:
-            // - view is not inserted into any container(view was created but not inserted yet)
-            // - view is inserted into a container but the container itself is not inserted into the DOM
-            // (container might be part of projection or child of a view that is not inserted yet).
-            // In other words we can insert children of a given view if this view was inserted into a
-            // container and the container itself has its render parent determined.
-            return getContainerRenderParent(
-            /** @type {?} */
-            hostTNode, currentView);
-          } else {
+          // We are inserting a root element of an embedded view We might delay insertion of children
+          // for a given view if it is disconnected. This might happen for 2 main reasons:
+          // - view is not inserted into any container(view was created but not inserted yet)
+          // - view is inserted into a container but the container itself is not inserted into the DOM
+          // (container might be part of projection or child of a view that is not inserted yet).
+          // In other words we can insert children of a given view if this view was inserted into a
+          // container and the container itself has its render parent determined.
+          return getContainerRenderParent(
+          /** @type {?} */
+          hostTNode, currentView);
+        } else {
           // We are inserting a root element of the component view into the component host element and
           // it should always be eager.
           ngDevMode && assertNodeOfPossibleTypes(hostTNode, 3
@@ -28762,11 +28788,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (isIcuCase && tNode.flags & 4
         /* isProjected */
         ) {
-            return (
-              /** @type {?} */
-              getNativeByTNode(tNode, currentView).parentNode
-            );
-          }
+          return (
+            /** @type {?} */
+            getNativeByTNode(tNode, currentView).parentNode
+          );
+        }
 
         ngDevMode && assertNodeType(parentTNode, 3
         /* Element */
@@ -28775,28 +28801,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (parentTNode.flags & 2
         /* isComponentHost */
         ) {
-            /** @type {?} */
-            var tData = tView.data;
-            /** @type {?} */
+          /** @type {?} */
+          var tData = tView.data;
+          /** @type {?} */
 
-            var _tNode2 =
-            /** @type {?} */
-            tData[parentTNode.index];
-            /** @type {?} */
+          var _tNode2 =
+          /** @type {?} */
+          tData[parentTNode.index];
+          /** @type {?} */
 
-            var encapsulation =
-            /** @type {?} */
-            tData[_tNode2.directiveStart].encapsulation; // We've got a parent which is an element in the current view. We just need to verify if the
-            // parent element is not a component. Component's content nodes are not inserted immediately
-            // because they will be projected, and so doing insert at this point would be wasteful.
-            // Since the projection would then move it to its final destination. Note that we can't
-            // make this assumption when using the Shadow DOM, because the native projection placeholders
-            // (<content> or <slot>) have to be in place as elements are being inserted.
+          var encapsulation =
+          /** @type {?} */
+          tData[_tNode2.directiveStart].encapsulation; // We've got a parent which is an element in the current view. We just need to verify if the
+          // parent element is not a component. Component's content nodes are not inserted immediately
+          // because they will be projected, and so doing insert at this point would be wasteful.
+          // Since the projection would then move it to its final destination. Note that we can't
+          // make this assumption when using the Shadow DOM, because the native projection placeholders
+          // (<content> or <slot>) have to be in place as elements are being inserted.
 
-            if (encapsulation !== ViewEncapsulation$1.ShadowDom && encapsulation !== ViewEncapsulation$1.Native) {
-              return null;
-            }
+          if (encapsulation !== ViewEncapsulation$1.ShadowDom && encapsulation !== ViewEncapsulation$1.Native) {
+            return null;
           }
+        }
 
         return (
           /** @type {?} */
@@ -28914,22 +28940,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (parentTNode.type === 2
       /* View */
       ) {
-          /** @type {?} */
-          var lContainer = getLContainer(
-          /** @type {?} */
-          parentTNode, lView);
-          if (lContainer === null) return null;
-          /** @type {?} */
+        /** @type {?} */
+        var lContainer = getLContainer(
+        /** @type {?} */
+        parentTNode, lView);
+        if (lContainer === null) return null;
+        /** @type {?} */
 
-          var index = lContainer.indexOf(lView, CONTAINER_HEADER_OFFSET) - CONTAINER_HEADER_OFFSET;
-          return getBeforeNodeForView(index, lContainer);
-        } else if (parentTNode.type === 4
+        var index = lContainer.indexOf(lView, CONTAINER_HEADER_OFFSET) - CONTAINER_HEADER_OFFSET;
+        return getBeforeNodeForView(index, lContainer);
+      } else if (parentTNode.type === 4
       /* ElementContainer */
       || parentTNode.type === 5
       /* IcuContainer */
       ) {
-          return getNativeByTNode(parentTNode, lView);
-        }
+        return getNativeByTNode(parentTNode, lView);
+      }
 
       return null;
     }
@@ -29001,32 +29027,32 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (tNodeType === 3
         /* Element */
         ) {
-            return getNativeByTNode(tNode, lView);
-          } else if (tNodeType === 0
+          return getNativeByTNode(tNode, lView);
+        } else if (tNodeType === 0
         /* Container */
         ) {
-            return getBeforeNodeForView(-1, lView[tNode.index]);
-          } else if (tNodeType === 4
+          return getBeforeNodeForView(-1, lView[tNode.index]);
+        } else if (tNodeType === 4
         /* ElementContainer */
         || tNodeType === 5
         /* IcuContainer */
         ) {
-            /** @type {?} */
-            var elIcuContainerChild = tNode.child;
+          /** @type {?} */
+          var elIcuContainerChild = tNode.child;
 
-            if (elIcuContainerChild !== null) {
-              return getFirstNativeNode(lView, elIcuContainerChild);
-            } else {
-              /** @type {?} */
-              var rNodeOrLContainer = lView[tNode.index];
-
-              if (isLContainer(rNodeOrLContainer)) {
-                return getBeforeNodeForView(-1, rNodeOrLContainer);
-              } else {
-                return unwrapRNode(rNodeOrLContainer);
-              }
-            }
+          if (elIcuContainerChild !== null) {
+            return getFirstNativeNode(lView, elIcuContainerChild);
           } else {
+            /** @type {?} */
+            var rNodeOrLContainer = lView[tNode.index];
+
+            if (isLContainer(rNodeOrLContainer)) {
+              return getBeforeNodeForView(-1, rNodeOrLContainer);
+            } else {
+              return unwrapRNode(rNodeOrLContainer);
+            }
+          }
+        } else {
           /** @type {?} */
           var componentView = lView[DECLARATION_COMPONENT_VIEW];
           /** @type {?} */
@@ -29145,11 +29171,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (action === 0
           /* Create */
           ) {
-              rawSlotValue && attachPatchData(unwrapRNode(rawSlotValue), lView);
-              tNode.flags |= 4
-              /* isProjected */
-              ;
-            }
+            rawSlotValue && attachPatchData(unwrapRNode(rawSlotValue), lView);
+            tNode.flags |= 4
+            /* isProjected */
+            ;
+          }
         }
 
         if ((tNode.flags & 64
@@ -29157,28 +29183,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         ) !== 64
         /* isDetached */
         ) {
-            if (tNodeType === 4
-            /* ElementContainer */
-            || tNodeType === 5
-            /* IcuContainer */
-            ) {
-                applyNodes(renderer, action, tNode.child, lView, renderParent, beforeNode, false);
-                applyToElementOrContainer(action, renderer, renderParent, rawSlotValue, beforeNode);
-              } else if (tNodeType === 1
-            /* Projection */
-            ) {
-                applyProjectionRecursive(renderer, action, lView,
-                /** @type {?} */
-                tNode, renderParent, beforeNode);
-              } else {
-              ngDevMode && assertNodeOfPossibleTypes(tNode, 3
-              /* Element */
-              , 0
-              /* Container */
-              );
-              applyToElementOrContainer(action, renderer, renderParent, rawSlotValue, beforeNode);
-            }
+          if (tNodeType === 4
+          /* ElementContainer */
+          || tNodeType === 5
+          /* IcuContainer */
+          ) {
+            applyNodes(renderer, action, tNode.child, lView, renderParent, beforeNode, false);
+            applyToElementOrContainer(action, renderer, renderParent, rawSlotValue, beforeNode);
+          } else if (tNodeType === 1
+          /* Projection */
+          ) {
+            applyProjectionRecursive(renderer, action, lView,
+            /** @type {?} */
+            tNode, renderParent, beforeNode);
+          } else {
+            ngDevMode && assertNodeOfPossibleTypes(tNode, 3
+            /* Element */
+            , 0
+            /* Container */
+            );
+            applyToElementOrContainer(action, renderer, renderParent, rawSlotValue, beforeNode);
           }
+        }
 
         tNode = isProjection ? tNode.projectionNext : tNode.next;
       }
@@ -29413,16 +29439,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (value == null
         /** || value === undefined */
         ) {
-            ngDevMode && ngDevMode.rendererRemoveStyle++;
+          ngDevMode && ngDevMode.rendererRemoveStyle++;
 
-            if (isProcedural) {
-              /** @type {?} */
-              renderer.removeStyle(rNode, prop, flags);
-            } else {
-              /** @type {?} */
-              rNode.style.removeProperty(prop);
-            }
+          if (isProcedural) {
+            /** @type {?} */
+            renderer.removeStyle(rNode, prop, flags);
           } else {
+            /** @type {?} */
+            rNode.style.removeProperty(prop);
+          }
+        } else {
           ngDevMode && ngDevMode.rendererSetStyle++;
 
           if (isProcedural) {
@@ -30038,40 +30064,40 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         || tNodeType === 5
         /* IcuContainer */
         ) {
-            collectNativeNodes(tView, lView, tNode.child, result);
-          } else if (tNodeType === 1
+          collectNativeNodes(tView, lView, tNode.child, result);
+        } else if (tNodeType === 1
         /* Projection */
         ) {
-            /** @type {?} */
-            var componentView = lView[DECLARATION_COMPONENT_VIEW];
-            /** @type {?} */
+          /** @type {?} */
+          var componentView = lView[DECLARATION_COMPONENT_VIEW];
+          /** @type {?} */
 
-            var componentHost =
-            /** @type {?} */
-            componentView[T_HOST];
-            /** @type {?} */
+          var componentHost =
+          /** @type {?} */
+          componentView[T_HOST];
+          /** @type {?} */
 
-            var slotIdx =
-            /** @type {?} */
-            tNode.projection;
-            ngDevMode && assertDefined(componentHost.projection, 'Components with projection nodes (<ng-content>) must have projection slots defined.');
-            /** @type {?} */
+          var slotIdx =
+          /** @type {?} */
+          tNode.projection;
+          ngDevMode && assertDefined(componentHost.projection, 'Components with projection nodes (<ng-content>) must have projection slots defined.');
+          /** @type {?} */
 
-            var nodesInSlot =
-            /** @type {?} */
-            componentHost.projection[slotIdx];
+          var nodesInSlot =
+          /** @type {?} */
+          componentHost.projection[slotIdx];
 
-            if (Array.isArray(nodesInSlot)) {
-              result.push.apply(result, _toConsumableArray(nodesInSlot));
-            } else {
-              /** @type {?} */
-              var parentView =
-              /** @type {?} */
-              getLViewParent(componentView);
-              ngDevMode && assertDefined(parentView, 'Component views should always have a parent view (component\'s host view)');
-              collectNativeNodes(parentView[TVIEW], parentView, nodesInSlot, result, true);
-            }
+          if (Array.isArray(nodesInSlot)) {
+            result.push.apply(result, _toConsumableArray(nodesInSlot));
+          } else {
+            /** @type {?} */
+            var parentView =
+            /** @type {?} */
+            getLViewParent(componentView);
+            ngDevMode && assertDefined(parentView, 'Component views should always have a parent view (component\'s host view)');
+            collectNativeNodes(parentView[TVIEW], parentView, nodesInSlot, result, true);
           }
+        }
 
         tNode = isProjection ? tNode.projectionNext : tNode.next;
       }
@@ -30123,7 +30149,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return _super11.apply(this, arguments);
           }
 
-          return ElementRef;
+          return _createClass2(ElementRef);
         }(ElementRefToken);
       }
 
@@ -30227,11 +30253,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (hostTNode.type === 0
       /* Container */
       ) {
-          ngDevMode && assertDefined(hostTNode.tViews, 'TView must be allocated');
-          return new R3TemplateRef(hostView,
-          /** @type {?} */
-          hostTNode, createElementRef(ElementRefToken, hostTNode, hostView));
-        } else {
+        ngDevMode && assertDefined(hostTNode.tViews, 'TView must be allocated');
+        return new R3TemplateRef(hostView,
+        /** @type {?} */
+        hostTNode, createElementRef(ElementRefToken, hostTNode, hostView));
+      } else {
         return null;
       }
     }
@@ -30624,10 +30650,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (hostTNode.type === 4
         /* ElementContainer */
         ) {
-            commentNode =
-            /** @type {?} */
-            unwrapRNode(slotValue);
-          } else {
+          commentNode =
+          /** @type {?} */
+          unwrapRNode(slotValue);
+        } else {
           ngDevMode && ngDevMode.rendererCreateComment++;
           commentNode = hostView[RENDERER].createComment(ngDevMode ? 'container' : ''); // A `ViewContainerRef` can be injected by the root (topmost / bootstrapped) component. In
           // this case we can't use TView / TNode data structures to insert container's marker node
@@ -30704,13 +30730,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       || tNode.type === 5
       /* IcuContainer */
       ) {
-          // The LView represents the location where the injection is requested from.
-          // We need to locate the containing LView (in case where the `lView` is an embedded view)
+        // The LView represents the location where the injection is requested from.
+        // We need to locate the containing LView (in case where the `lView` is an embedded view)
 
-          /** @type {?} */
-          var hostComponentView = lView[DECLARATION_COMPONENT_VIEW];
-          return new ViewRef(hostComponentView, lView);
-        }
+        /** @type {?} */
+        var hostComponentView = lView[DECLARATION_COMPONENT_VIEW];
+        return new ViewRef(hostComponentView, lView);
+      }
 
       return (
         /** @type {?} */
@@ -30808,9 +30834,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var ChangeDetectorRef = function ChangeDetectorRef() {
+    var ChangeDetectorRef =
+    /*#__PURE__*/
+    _createClass2(function ChangeDetectorRef() {
       _classCallCheck(this, ChangeDetectorRef);
-    };
+    });
     /**
      * \@internal
      * @nocollapse
@@ -31995,8 +32023,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               if (record != null
               /* NOT null || undefined */
               ) {
-                  return this.hydrate(token, record);
-                }
+                return this.hydrate(token, record);
+              }
             } // Select the next injector based on the Self flag - if self is set, the next injector is
             // the NullInjector, otherwise it's the parent.
 
@@ -33935,6 +33963,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     if (false) {}
 
     var ResolvedReflectiveProvider_ =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} key
      * @param {?} resolvedFactories
@@ -33947,7 +33977,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.resolvedFactories = resolvedFactories;
       this.multiProvider = multiProvider;
       this.resolvedFactory = this.resolvedFactories[0];
-    };
+    });
 
     if (false) {}
     /**
@@ -33957,6 +33987,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
     var ResolvedReflectiveFactory =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} factory
      * @param {?} dependencies
@@ -33966,7 +33998,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       this.factory = factory;
       this.dependencies = dependencies;
-    };
+    });
 
     if (false) {}
     /**
@@ -34884,9 +34916,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var Query = function Query() {
+    var Query =
+    /*#__PURE__*/
+    _createClass2(function Query() {
       _classCallCheck(this, Query);
-    };
+    });
     /**
      * Type of the ContentChildren decorator / constructor function.
      *
@@ -35314,23 +35348,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           } else if (mode == 1
           /* Classes */
           ) {
-              classes = concatStringsWithSpace(classes,
-              /** @type {?} */
-              value);
-            } else if (mode == 2
+            classes = concatStringsWithSpace(classes,
+            /** @type {?} */
+            value);
+          } else if (mode == 2
           /* Styles */
           ) {
-              /** @type {?} */
-              var style =
-              /** @type {?} */
-              value;
-              /** @type {?} */
+            /** @type {?} */
+            var style =
+            /** @type {?} */
+            value;
+            /** @type {?} */
 
-              var styleValue =
-              /** @type {?} */
-              attrs[++i];
-              styles = concatStringsWithSpace(styles, style + ': ' + styleValue + ';');
-            }
+            var styleValue =
+            /** @type {?} */
+            attrs[++i];
+            styles = concatStringsWithSpace(styles, style + ': ' + styleValue + ';');
+          }
         }
       }
 
@@ -37529,97 +37563,97 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (tNode.type === 3
       /* Element */
       ) {
-          /** @type {?} */
-          var _native15 =
-          /** @type {?} */
-          getNativeByTNode(tNode, lView);
-          /** @type {?} */
+        /** @type {?} */
+        var _native15 =
+        /** @type {?} */
+        getNativeByTNode(tNode, lView);
+        /** @type {?} */
 
 
-          var resolved = eventTargetResolver ? eventTargetResolver(_native15) :
-          /** @type {?} */
-          EMPTY_OBJ;
-          /** @type {?} */
+        var resolved = eventTargetResolver ? eventTargetResolver(_native15) :
+        /** @type {?} */
+        EMPTY_OBJ;
+        /** @type {?} */
 
-          var target = resolved.target || _native15;
+        var target = resolved.target || _native15;
+        /** @type {?} */
+
+        var lCleanupIndex = lCleanup.length;
+        /** @type {?} */
+
+        var idxOrTargetGetter = eventTargetResolver ?
+        /**
+        * @param {?} _lView
+        * @return {?}
+        */
+        function (_lView) {
+          return eventTargetResolver(unwrapRNode(_lView[tNode.index])).target;
+        } : tNode.index; // In order to match current behavior, native DOM event listeners must be added for all
+        // events (including outputs).
+
+        if (isProceduralRenderer(renderer)) {
+          // There might be cases where multiple directives on the same element try to register an event
+          // handler function for the same event. In this situation we want to avoid registration of
+          // several native listeners as each registration would be intercepted by NgZone and
+          // trigger change detection. This would mean that a single user action would result in several
+          // change detections being invoked. To avoid this situation we want to have only one call to
+          // native handler registration (for the same element and same type of event).
+          //
+          // In order to have just one native event handler in presence of multiple handler functions,
+          // we just register a first handler function as a native event listener and then chain
+          // (coalesce) other handler functions on top of the first native handler function.
+
           /** @type {?} */
+          var existingListener = null; // Please note that the coalescing described here doesn't happen for events specifying an
+          // alternative target (ex. (document:click)) - this is to keep backward compatibility with the
+          // view engine.
+          // Also, we don't have to search for existing listeners is there are no directives
+          // matching on a given node as we can't register multiple event handlers for the same event in
+          // a template (this would mean having duplicate attributes).
 
-          var lCleanupIndex = lCleanup.length;
-          /** @type {?} */
+          if (!eventTargetResolver && isTNodeDirectiveHost) {
+            existingListener = findExistingListener(tView, lView, eventName, tNode.index);
+          }
 
-          var idxOrTargetGetter = eventTargetResolver ?
-          /**
-          * @param {?} _lView
-          * @return {?}
-          */
-          function (_lView) {
-            return eventTargetResolver(unwrapRNode(_lView[tNode.index])).target;
-          } : tNode.index; // In order to match current behavior, native DOM event listeners must be added for all
-          // events (including outputs).
-
-          if (isProceduralRenderer(renderer)) {
-            // There might be cases where multiple directives on the same element try to register an event
-            // handler function for the same event. In this situation we want to avoid registration of
-            // several native listeners as each registration would be intercepted by NgZone and
-            // trigger change detection. This would mean that a single user action would result in several
-            // change detections being invoked. To avoid this situation we want to have only one call to
-            // native handler registration (for the same element and same type of event).
-            //
-            // In order to have just one native event handler in presence of multiple handler functions,
-            // we just register a first handler function as a native event listener and then chain
-            // (coalesce) other handler functions on top of the first native handler function.
+          if (existingListener !== null) {
+            // Attach a new listener to coalesced listeners list, maintaining the order in which
+            // listeners are registered. For performance reasons, we keep a reference to the last
+            // listener in that list (in `__ngLastListenerFn__` field), so we can avoid going through
+            // the entire set each time we need to add a new listener.
 
             /** @type {?} */
-            var existingListener = null; // Please note that the coalescing described here doesn't happen for events specifying an
-            // alternative target (ex. (document:click)) - this is to keep backward compatibility with the
-            // view engine.
-            // Also, we don't have to search for existing listeners is there are no directives
-            // matching on a given node as we can't register multiple event handlers for the same event in
-            // a template (this would mean having duplicate attributes).
+            var lastListenerFn =
+            /** @type {?} */
+            existingListener.__ngLastListenerFn__ || existingListener;
+            lastListenerFn.__ngNextListenerFn__ = listenerFn;
 
-            if (!eventTargetResolver && isTNodeDirectiveHost) {
-              existingListener = findExistingListener(tView, lView, eventName, tNode.index);
-            }
-
-            if (existingListener !== null) {
-              // Attach a new listener to coalesced listeners list, maintaining the order in which
-              // listeners are registered. For performance reasons, we keep a reference to the last
-              // listener in that list (in `__ngLastListenerFn__` field), so we can avoid going through
-              // the entire set each time we need to add a new listener.
-
-              /** @type {?} */
-              var lastListenerFn =
-              /** @type {?} */
-              existingListener.__ngLastListenerFn__ || existingListener;
-              lastListenerFn.__ngNextListenerFn__ = listenerFn;
-
-              /** @type {?} */
-              existingListener.__ngLastListenerFn__ = listenerFn;
-              processOutputs = false;
-            } else {
-              // The first argument of `listen` function in Procedural Renderer is:
-              // - either a target name (as a string) in case of global target (window, document, body)
-              // - or element reference (in all other cases)
-              listenerFn = wrapListener(tNode, lView, listenerFn, false
-              /** preventDefault */
-              );
-              /** @type {?} */
-
-              var cleanupFn = renderer.listen(resolved.name || target, eventName, listenerFn);
-              ngDevMode && ngDevMode.rendererAddEventListener++;
-              lCleanup.push(listenerFn, cleanupFn);
-              tCleanup && tCleanup.push(eventName, idxOrTargetGetter, lCleanupIndex, lCleanupIndex + 1);
-            }
+            /** @type {?} */
+            existingListener.__ngLastListenerFn__ = listenerFn;
+            processOutputs = false;
           } else {
-            listenerFn = wrapListener(tNode, lView, listenerFn, true
+            // The first argument of `listen` function in Procedural Renderer is:
+            // - either a target name (as a string) in case of global target (window, document, body)
+            // - or element reference (in all other cases)
+            listenerFn = wrapListener(tNode, lView, listenerFn, false
             /** preventDefault */
             );
-            target.addEventListener(eventName, listenerFn, useCapture);
+            /** @type {?} */
+
+            var cleanupFn = renderer.listen(resolved.name || target, eventName, listenerFn);
             ngDevMode && ngDevMode.rendererAddEventListener++;
-            lCleanup.push(listenerFn);
-            tCleanup && tCleanup.push(eventName, idxOrTargetGetter, lCleanupIndex, useCapture);
+            lCleanup.push(listenerFn, cleanupFn);
+            tCleanup && tCleanup.push(eventName, idxOrTargetGetter, lCleanupIndex, lCleanupIndex + 1);
           }
-        } // subscribe to directive outputs
+        } else {
+          listenerFn = wrapListener(tNode, lView, listenerFn, true
+          /** preventDefault */
+          );
+          target.addEventListener(eventName, listenerFn, useCapture);
+          ngDevMode && ngDevMode.rendererAddEventListener++;
+          lCleanup.push(listenerFn);
+          tCleanup && tCleanup.push(eventName, idxOrTargetGetter, lCleanupIndex, useCapture);
+        }
+      } // subscribe to directive outputs
 
       /** @type {?} */
 
@@ -38996,8 +39030,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       // contains a match.
       (Array.isArray(tStylingKeyCursor) ? tStylingKeyCursor[1] : tStylingKeyCursor) === tStylingKey // If the keys match explicitly than we are a match.
       ) {
-          return true;
-        } else if (Array.isArray(tStylingKeyCursor) && typeof tStylingKey === 'string') {
+        return true;
+      } else if (Array.isArray(tStylingKeyCursor) && typeof tStylingKey === 'string') {
         // if we did not find a match, but `tStylingKeyCursor` is `KeyValueArray` that means cursor has
         // statics and we need to check those as well.
         return keyValueArrayIndexOf(tStylingKeyCursor, tStylingKey) >= 0; // see if we are matching the key
@@ -39322,14 +39356,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (ch === 59
         /* SEMI_COLON */
         ) {
-            return lastChIndex;
-          } else if (ch === 34
+          return lastChIndex;
+        } else if (ch === 34
         /* DOUBLE_QUOTE */
         || ch === 39
         /* SINGLE_QUOTE */
         ) {
-            lastChIndex = i = consumeQuotedText(text, ch, i, endIndex);
-          } else if (startIndex === i - 4 && // We have seen only 4 characters so far "URL(" (Ignore "foo_URL()")
+          lastChIndex = i = consumeQuotedText(text, ch, i, endIndex);
+        } else if (startIndex === i - 4 && // We have seen only 4 characters so far "URL(" (Ignore "foo_URL()")
         ch3 === 85
         /* U */
         && ch2 === 82
@@ -39339,15 +39373,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         && ch === 40
         /* OPEN_PAREN */
         ) {
-            lastChIndex = i = consumeQuotedText(text, 41
-            /* CLOSE_PAREN */
-            , i, endIndex);
-          } else if (ch > 32
+          lastChIndex = i = consumeQuotedText(text, 41
+          /* CLOSE_PAREN */
+          , i, endIndex);
+        } else if (ch > 32
         /* SPACE */
         ) {
-            // if we have a non-whitespace character then capture its location
-            lastChIndex = i;
-          }
+          // if we have a non-whitespace character then capture its location
+          lastChIndex = i;
+        }
 
         ch3 = ch2;
         ch2 = ch1;
@@ -39384,18 +39418,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (ch == quoteCharCode && ch1 !== 92
         /* BACK_SLASH */
         ) {
-            return index;
-          }
+          return index;
+        }
 
         if (ch == 92
         /* BACK_SLASH */
         && ch1 === 92
         /* BACK_SLASH */
         ) {
-            // two back slashes cancel each other out. For example `"\\"` should properly end the
-            // quotation. (It should not assume that the last `"` is escaped.)
-            ch1 = 0;
-          } else {
+          // two back slashes cancel each other out. For example `"\\"` should properly end the
+          // quotation. (It should not assume that the last `"` is escaped.)
+          ch1 = 0;
+        } else {
           ch1 = ch;
         }
       }
@@ -40290,10 +40324,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (tNode.type !== 3
       /* Element */
       ) {
-          // It is possible to have styling on non-elements (such as ng-container).
-          // This is rare, but it does happen. In such a case, just ignore the binding.
-          return;
-        }
+        // It is possible to have styling on non-elements (such as ng-container).
+        // This is rare, but it does happen. In such a case, just ignore the binding.
+        return;
+      }
       /** @type {?} */
 
 
@@ -40440,10 +40474,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (residual != null
         /** OR residual !=== undefined */
         ) {
-            value = keyValueArrayGet(
-            /** @type {?} */
-            residual, prop);
-          }
+          value = keyValueArrayGet(
+          /** @type {?} */
+          residual, prop);
+        }
       }
 
       return value;
@@ -40478,7 +40512,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (value == null
       /** || value === undefined */
       ) {// do nothing
-        } else if (typeof suffixOrSanitizer === 'function') {
+      } else if (typeof suffixOrSanitizer === 'function') {
         // sanitize the value.
         value = suffixOrSanitizer(value);
       } else if (typeof suffixOrSanitizer === 'string') {
@@ -44233,9 +44267,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var ComponentRef = function ComponentRef() {
+    var ComponentRef =
+    /*#__PURE__*/
+    _createClass2(function ComponentRef() {
       _classCallCheck(this, ComponentRef);
-    };
+    });
 
     if (false) {}
     /**
@@ -44251,9 +44287,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var ComponentFactory = function ComponentFactory() {
+    var ComponentFactory =
+    /*#__PURE__*/
+    _createClass2(function ComponentFactory() {
       _classCallCheck(this, ComponentFactory);
-    };
+    });
 
     if (false) {}
     /**
@@ -44326,9 +44364,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var ComponentFactoryResolver = function ComponentFactoryResolver() {
+    var ComponentFactoryResolver =
+    /*#__PURE__*/
+    _createClass2(function ComponentFactoryResolver() {
       _classCallCheck(this, ComponentFactoryResolver);
-    };
+    });
 
     ComponentFactoryResolver.NULL = new _NullComponentFactoryResolver();
 
@@ -44472,6 +44512,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
     var ElementRef =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} nativeElement
      */
@@ -44479,7 +44521,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _classCallCheck(this, ElementRef);
 
       this.nativeElement = nativeElement;
-    };
+    });
     /**
      * \@internal
      * @nocollapse
@@ -44532,9 +44574,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var RendererFactory2 = function RendererFactory2() {
+    var RendererFactory2 =
+    /*#__PURE__*/
+    _createClass2(function RendererFactory2() {
       _classCallCheck(this, RendererFactory2);
-    };
+    });
 
     if (false) {}
     /** @enum {number} */
@@ -44574,9 +44618,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @abstract
      */
 
-    var Renderer2 = function Renderer2() {
+    var Renderer2 =
+    /*#__PURE__*/
+    _createClass2(function Renderer2() {
       _classCallCheck(this, Renderer2);
-    };
+    });
     /**
      * \@internal
      * @nocollapse
@@ -44615,9 +44661,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @abstract
      */
 
-    var Sanitizer = function Sanitizer() {
+    var Sanitizer =
+    /*#__PURE__*/
+    _createClass2(function Sanitizer() {
       _classCallCheck(this, Sanitizer);
-    };
+    });
     /** @nocollapse */
 
 
@@ -44656,6 +44704,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
     var Version =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} full
      */
@@ -44666,7 +44716,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.major = full.split('.')[0];
       this.minor = full.split('.')[1];
       this.patch = full.split('.').slice(2).join('.');
-    };
+    });
 
     if (false) {}
     /**
@@ -45536,6 +45586,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
     var IterableChangeRecord_ =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} item
      * @param {?} trackById
@@ -45597,7 +45649,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
        */
 
       this._nextIdentityChange = null;
-    };
+    });
 
     if (false) {} // A linked list of CollectionChangeRecords with the same IterableChangeRecord_.item
 
@@ -46312,6 +46364,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
     var KeyValueChangeRecord_ =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} key
      */
@@ -46351,7 +46405,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
        */
 
       this._nextChanged = null;
-    };
+    });
 
     if (false) {}
     /**
@@ -46801,9 +46855,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @template C
      */
 
-    var TemplateRef = function TemplateRef() {
+    var TemplateRef =
+    /*#__PURE__*/
+    _createClass2(function TemplateRef() {
       _classCallCheck(this, TemplateRef);
-    };
+    });
     /**
      * \@internal
      * @nocollapse
@@ -46852,9 +46908,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @abstract
      */
 
-    var ViewContainerRef = function ViewContainerRef() {
+    var ViewContainerRef =
+    /*#__PURE__*/
+    _createClass2(function ViewContainerRef() {
       _classCallCheck(this, ViewContainerRef);
-    };
+    });
     /**
      * \@internal
      * @nocollapse
@@ -47373,9 +47431,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var NodeData = function NodeData() {
+    var NodeData =
+    /*#__PURE__*/
+    _createClass2(function NodeData() {
       _classCallCheck(this, NodeData);
-    };
+    });
 
     if (false) {}
     /**
@@ -47521,9 +47581,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var DebugContext = function DebugContext() {
+    var DebugContext =
+    /*#__PURE__*/
+    _createClass2(function DebugContext() {
       _classCallCheck(this, DebugContext);
-    };
+    });
 
     if (false) {}
     /** @enum {number} */
@@ -47785,10 +47847,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (currView.def.flags & 2
         /* OnPush */
         ) {
-            currView.state |= 8
-            /* ChecksEnabled */
-            ;
-          }
+          currView.state |= 8
+          /* ChecksEnabled */
+          ;
+        }
 
         currView = currView.viewContainerParent || currView.parent;
       }
@@ -48133,10 +48195,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (action === 3
       /* RemoveChild */
       ) {
-          parentNode = view.renderer.parentNode(renderNode(view,
-          /** @type {?} */
-          view.def.lastRenderRootNode));
-        }
+        parentNode = view.renderer.parentNode(renderNode(view,
+        /** @type {?} */
+        view.def.lastRenderRootNode));
+      }
 
       visitSiblingRenderNodes(view, action, 0, view.def.nodes.length - 1, parentNode, nextSibling, target);
     }
@@ -48259,10 +48321,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (nodeDef.flags & 8
       /* TypeNgContent */
       ) {
-          visitProjectedRenderNodes(view,
-          /** @type {?} */
-          nodeDef.ngContent.index, action, parentNode, nextSibling, target);
-        } else {
+        visitProjectedRenderNodes(view,
+        /** @type {?} */
+        nodeDef.ngContent.index, action, parentNode, nextSibling, target);
+      } else {
         /** @type {?} */
         var rn = renderNode(view, nodeDef);
 
@@ -48294,15 +48356,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (nodeDef.flags & 16777216
         /* EmbeddedViews */
         ) {
-            /** @type {?} */
-            var embeddedViews =
-            /** @type {?} */
-            asElementData(view, nodeDef.nodeIndex).viewContainer._embeddedViews;
+          /** @type {?} */
+          var embeddedViews =
+          /** @type {?} */
+          asElementData(view, nodeDef.nodeIndex).viewContainer._embeddedViews;
 
-            for (var k = 0; k < embeddedViews.length; k++) {
-              visitRootRenderNodes(embeddedViews[k], action, parentNode, nextSibling, target);
-            }
+          for (var k = 0; k < embeddedViews.length; k++) {
+            visitRootRenderNodes(embeddedViews[k], action, parentNode, nextSibling, target);
           }
+        }
 
         if (nodeDef.flags & 1
         /* TypeElement */
@@ -48552,8 +48614,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (provider.flags & 1073741824
         /* TypeNgModule */
         ) {
-            modules.push(provider.token);
-          }
+          modules.push(provider.token);
+        }
 
         provider.index = i;
         providersByKey[tokenKey(provider.token)] = provider;
@@ -48613,20 +48675,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (depDef.flags & 8
         /* Value */
         ) {
-            return depDef.token;
-          }
+          return depDef.token;
+        }
 
         if (depDef.flags & 2
         /* Optional */
         ) {
-            notFoundValue = null;
-          }
+          notFoundValue = null;
+        }
 
         if (depDef.flags & 1
         /* SkipSelf */
         ) {
-            return data._parent.get(depDef.token, notFoundValue);
-          }
+          return data._parent.get(depDef.token, notFoundValue);
+        }
         /** @type {?} */
 
 
@@ -48674,8 +48736,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         } else if (depDef.flags & 4
         /* Self */
         ) {
-            return notFoundValue;
-          }
+          return notFoundValue;
+        }
 
         return data._parent.get(depDef.token, notFoundValue);
       } finally {
@@ -48850,19 +48912,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (provDef.flags & 131072
         /* OnDestroy */
         ) {
+          /** @type {?} */
+          var instance = ngModule._providers[i];
+
+          if (instance && instance !== UNDEFINED_VALUE) {
             /** @type {?} */
-            var instance = ngModule._providers[i];
+            var onDestroy = instance.ngOnDestroy;
 
-            if (instance && instance !== UNDEFINED_VALUE) {
-              /** @type {?} */
-              var onDestroy = instance.ngOnDestroy;
-
-              if (typeof onDestroy === 'function' && !destroyed.has(instance)) {
-                onDestroy.apply(instance);
-                destroyed.add(instance);
-              }
+            if (typeof onDestroy === 'function' && !destroyed.has(instance)) {
+              onDestroy.apply(instance);
+              destroyed.add(instance);
             }
           }
+        }
       }
     }
     /**
@@ -48919,8 +48981,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (!dvcElementData || dvcElementData === vcElementData || view.state & 16
       /* IsProjectedView */
       ) {
-          return;
-        } // Note: For performance reasons, we
+        return;
+      } // Note: For performance reasons, we
       // - add a view to template._projectedViews only 1x throughout its lifetime,
       //   and remove it not until the view is destroyed.
       //   (hard, as when a parent view is attached/detached we would need to attach/detach all
@@ -48960,8 +49022,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (nodeDef.flags & 4
       /* ProjectedTemplate */
       ) {
-          return;
-        }
+        return;
+      }
 
       viewDef.nodeFlags |= 4
       /* ProjectedTemplate */
@@ -49929,17 +49991,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (def.flags & 1
       /* TypeElement */
       ) {
+        /** @type {?} */
+        var elData = asElementData(view, def.nodeIndex);
+        return (
           /** @type {?} */
-          var elData = asElementData(view, def.nodeIndex);
-          return (
-            /** @type {?} */
-            def.element.template ? elData.template : elData.renderElement
-          );
-        } else if (def.flags & 2
+          def.element.template ? elData.template : elData.renderElement
+        );
+      } else if (def.flags & 2
       /* TypeText */
       ) {
-          return asTextData(view, def.nodeIndex).renderText;
-        } else if (def.flags & (20224
+        return asTextData(view, def.nodeIndex).renderText;
+      } else if (def.flags & (20224
       /* CatProvider */
       | 16
       /* TypePipe */
@@ -50468,8 +50530,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (def.flags & 262144
       /* DoCheck */
       ) {
-          directive.ngDoCheck();
-        }
+        directive.ngDoCheck();
+      }
 
       return changed;
     }
@@ -50518,8 +50580,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (def.flags & 262144
       /* DoCheck */
       ) {
-          directive.ngDoCheck();
-        }
+        directive.ngDoCheck();
+      }
 
       return changed;
     }
@@ -50696,8 +50758,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (depDef.flags & 8
       /* Value */
       ) {
-          return depDef.token;
-        }
+        return depDef.token;
+      }
       /** @type {?} */
 
 
@@ -50706,8 +50768,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (depDef.flags & 2
       /* Optional */
       ) {
-          notFoundValue = null;
-        }
+        notFoundValue = null;
+      }
       /** @type {?} */
 
 
@@ -50812,8 +50874,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (depDef.flags & 4
         /* Self */
         ) {
-            searchView = null;
-          }
+          searchView = null;
+        }
       }
       /** @type {?} */
 
@@ -50870,19 +50932,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (def.flags & 32768
       /* Component */
       ) {
-          /** @type {?} */
-          var compView = asElementData(view,
-          /** @type {?} */
-          def.parent.nodeIndex).componentView;
+        /** @type {?} */
+        var compView = asElementData(view,
+        /** @type {?} */
+        def.parent.nodeIndex).componentView;
 
-          if (compView.def.flags & 2
-          /* OnPush */
-          ) {
-              compView.state |= 8
-              /* ChecksEnabled */
-              ;
-            }
+        if (compView.def.flags & 2
+        /* OnPush */
+        ) {
+          compView.state |= 8
+          /* ChecksEnabled */
+          ;
         }
+      }
       /** @type {?} */
 
 
@@ -50900,19 +50962,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (def.flags & 524288
       /* OnChanges */
       ) {
-          changes = changes || {};
-          /** @type {?} */
+        changes = changes || {};
+        /** @type {?} */
 
-          var oldValue = WrappedValue.unwrap(view.oldValues[def.bindingIndex + bindingIdx]);
-          /** @type {?} */
+        var oldValue = WrappedValue.unwrap(view.oldValues[def.bindingIndex + bindingIdx]);
+        /** @type {?} */
 
-          var _binding = def.bindings[bindingIdx];
-          changes[
-          /** @type {?} */
-          _binding.nonMinifiedName] = new SimpleChange(oldValue, value, (view.state & 2
-          /* FirstCheck */
-          ) !== 0);
-        }
+        var _binding = def.bindings[bindingIdx];
+        changes[
+        /** @type {?} */
+        _binding.nonMinifiedName] = new SimpleChange(oldValue, value, (view.state & 2
+        /* FirstCheck */
+        ) !== 0);
+      }
 
       view.oldValues[def.bindingIndex + bindingIdx] = value;
       return changes;
@@ -51070,8 +51132,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (lifecycles & 2097152
       /* AfterContentChecked */
       ) {
-          provider.ngAfterContentChecked();
-        }
+        provider.ngAfterContentChecked();
+      }
 
       if (lifecycles & 4194304
       /* AfterViewInit */
@@ -51084,14 +51146,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (lifecycles & 8388608
       /* AfterViewChecked */
       ) {
-          provider.ngAfterViewChecked();
-        }
+        provider.ngAfterViewChecked();
+      }
 
       if (lifecycles & 131072
       /* OnDestroy */
       ) {
-          provider.ngOnDestroy();
-        }
+        provider.ngOnDestroy();
+      }
     }
     /**
      * @fileoverview added by tsickle
@@ -52041,9 +52103,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (icuType === 1
         /* plural */
         ) {
-            // Key can be "=x", we just want "x"
-            key = key.replace(/\s*(?:=)?(\w+)\s*/, '$1');
-          }
+          // Key can be "=x", we just want "x"
+          key = key.replace(/\s*(?:=)?(\w+)\s*/, '$1');
+        }
 
         if (key.length) {
           cases.push(key);
@@ -52403,15 +52465,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               if (value.charAt(1) === "#"
               /* ELEMENT */
               ) {
-                  /** @type {?} */
-                  var phIndex = parseInt(value.substr(2), 10);
-                  parentIndex = parentIndexStack[--parentIndexPointer];
-                  createOpCodes.push(phIndex << 3
-                  /* SHIFT_REF */
-                  | 5
-                  /* ElementEnd */
-                  );
-                }
+                /** @type {?} */
+                var phIndex = parseInt(value.substr(2), 10);
+                parentIndex = parentIndexStack[--parentIndexPointer];
+                createOpCodes.push(phIndex << 3
+                /* SHIFT_REF */
+                | 5
+                /* ElementEnd */
+                );
+              }
             } else {
               /** @type {?} */
               var _phIndex = parseInt(value.substr(1), 10);
@@ -52589,11 +52651,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (tNode.type === 1
       /* Projection */
       ) {
-          applyProjection(tView, lView,
-          /** @type {?} */
-          tNode);
-          return tNode;
-        }
+        applyProjection(tView, lView,
+        /** @type {?} */
+        tNode);
+        return tNode;
+      }
 
       appendChild(tView, lView, getNativeByTNode(tNode, lView), tNode);
       /** @type {?} */
@@ -53346,8 +53408,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (removedPhTNode.type !== 0
         /* Container */
         ) {
-            nativeRemoveNode(lView[RENDERER], lContainer[NATIVE]);
-          }
+          nativeRemoveNode(lView[RENDERER], lContainer[NATIVE]);
+        }
       }
 
       if (markAsDetached) {
@@ -53468,8 +53530,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               if (tNode.type === 3
               /* Element */
               ) {
-                  elementAttributeInternal(tNode, lView, attrName, value, null, null);
-                } // Check if that attribute is a directive input
+                elementAttributeInternal(tNode, lView, attrName, value, null, null);
+              } // Check if that attribute is a directive input
 
               /** @type {?} */
 
@@ -55908,6 +55970,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     if (false) {}
 
     var TQueryMetadata_ =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} predicate
      * @param {?} descendants
@@ -55923,7 +55987,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.descendants = descendants;
       this.isStatic = isStatic;
       this.read = read;
-    };
+    });
 
     if (false) {}
 
@@ -56195,8 +56259,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               if (tNode.type === 0
               /* Container */
               ) {
-                  this.matchTNodeWithReadOption(tView, tNode, -1);
-                }
+                this.matchTNodeWithReadOption(tView, tNode, -1);
+              }
             } else {
               this.matchTNodeWithReadOption(tView, tNode, locateDirectiveOrProvider(tNode, tView, typePredicate, false, false));
             }
@@ -56221,8 +56285,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               if (read === ElementRef || read === ViewContainerRef || read === TemplateRef && tNode.type === 0
               /* Container */
               ) {
-                  this.addMatch(tNode.index, -2);
-                } else {
+                this.addMatch(tNode.index, -2);
+              } else {
                 /** @type {?} */
                 var directiveOrProviderIdx = locateDirectiveOrProvider(tNode, tView, read, false, false);
 
@@ -56297,12 +56361,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       || tNode.type === 4
       /* ElementContainer */
       ) {
-          return createElementRef(ElementRef, tNode, currentView);
-        } else if (tNode.type === 0
+        return createElementRef(ElementRef, tNode, currentView);
+      } else if (tNode.type === 0
       /* Container */
       ) {
-          return createTemplateRef(TemplateRef, ElementRef, tNode, currentView);
-        }
+        return createTemplateRef(TemplateRef, ElementRef, tNode, currentView);
+      }
 
       return null;
     }
@@ -59372,6 +59436,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
     var ModuleWithComponentFactories =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} ngModuleFactory
      * @param {?} componentFactories
@@ -59381,7 +59447,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       this.ngModuleFactory = ngModuleFactory;
       this.componentFactories = componentFactories;
-    };
+    });
 
     if (false) {}
     /**
@@ -59604,9 +59670,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @abstract
      */
 
-    var CompilerFactory = function CompilerFactory() {
+    var CompilerFactory =
+    /*#__PURE__*/
+    _createClass2(function CompilerFactory() {
       _classCallCheck(this, CompilerFactory);
-    };
+    });
 
     if (false) {}
     /**
@@ -61038,6 +61106,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
     var NgProbeToken =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} name
      * @param {?} token
@@ -61047,7 +61117,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       this.name = name;
       this.token = token;
-    };
+    });
 
     if (false) {}
     /**
@@ -62240,9 +62310,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var NgModuleFactoryLoader = function NgModuleFactoryLoader() {
+    var NgModuleFactoryLoader =
+    /*#__PURE__*/
+    _createClass2(function NgModuleFactoryLoader() {
       _classCallCheck(this, NgModuleFactoryLoader);
-    };
+    });
 
     if (false) {}
     /**
@@ -62314,9 +62386,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @abstract
      */
 
-    var SystemJsNgModuleLoaderConfig = function SystemJsNgModuleLoaderConfig() {
+    var SystemJsNgModuleLoaderConfig =
+    /*#__PURE__*/
+    _createClass2(function SystemJsNgModuleLoaderConfig() {
       _classCallCheck(this, SystemJsNgModuleLoaderConfig);
-    };
+    });
 
     if (false) {}
     /** @type {?} */
@@ -62532,7 +62606,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return _super24.apply(this, arguments);
       }
 
-      return ViewRef$1;
+      return _createClass2(ViewRef$1);
     }(ChangeDetectorRef);
 
     if (false) {}
@@ -62606,7 +62680,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return _super25.apply(this, arguments);
       }
 
-      return EmbeddedViewRef;
+      return _createClass2(EmbeddedViewRef);
     }(ViewRef$1);
 
     if (false) {}
@@ -62636,6 +62710,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
     var DebugEventListener =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} name
      * @param {?} callback
@@ -62645,7 +62721,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       this.name = name;
       this.callback = callback;
-    };
+    });
 
     if (false) {} // WARNING: interface has both a type and a value, skipping emit
 
@@ -63592,115 +63668,115 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       || tNode.type === 4
       /* ElementContainer */
       ) {
-          // Case 1: the TNode is an element
-          // The native node has to be checked.
-          _addQueryMatchR3(nativeNode, predicate, matches, elementsOnly, rootNativeNode);
+        // Case 1: the TNode is an element
+        // The native node has to be checked.
+        _addQueryMatchR3(nativeNode, predicate, matches, elementsOnly, rootNativeNode);
 
-          if (isComponentHost(tNode)) {
-            // If the element is the host of a component, then all nodes in its view have to be processed.
-            // Note: the component's content (tNode.child) will be processed from the insertion points.
-
-            /** @type {?} */
-            var componentView = getComponentLViewByIndex(tNode.index, lView);
-
-            if (componentView && componentView[TVIEW].firstChild) {
-              _queryNodeChildrenR3(
-              /** @type {?} */
-              componentView[TVIEW].firstChild, componentView, predicate, matches, elementsOnly, rootNativeNode);
-            }
-          } else {
-            if (tNode.child) {
-              // Otherwise, its children have to be processed.
-              _queryNodeChildrenR3(tNode.child, lView, predicate, matches, elementsOnly, rootNativeNode);
-            } // We also have to query the DOM directly in order to catch elements inserted through
-            // Renderer2. Note that this is __not__ optimal, because we're walking similar trees multiple
-            // times. ViewEngine could do it more efficiently, because all the insertions go through
-            // Renderer2, however that's not the case in Ivy. This approach is being used because:
-            // 1. Matching the ViewEngine behavior would mean potentially introducing a depedency
-            //    from `Renderer2` to Ivy which could bring Ivy code into ViewEngine.
-            // 2. We would have to make `Renderer3` "know" about debug nodes.
-            // 3. It allows us to capture nodes that were inserted directly via the DOM.
-
-
-            nativeNode && _queryNativeNodeDescendants(nativeNode, predicate, matches, elementsOnly);
-          } // In all cases, if a dynamic container exists for this node, each view inside it has to be
-          // processed.
+        if (isComponentHost(tNode)) {
+          // If the element is the host of a component, then all nodes in its view have to be processed.
+          // Note: the component's content (tNode.child) will be processed from the insertion points.
 
           /** @type {?} */
+          var componentView = getComponentLViewByIndex(tNode.index, lView);
 
-
-          var nodeOrContainer = lView[tNode.index];
-
-          if (isLContainer(nodeOrContainer)) {
-            _queryNodeChildrenInContainerR3(nodeOrContainer, predicate, matches, elementsOnly, rootNativeNode);
+          if (componentView && componentView[TVIEW].firstChild) {
+            _queryNodeChildrenR3(
+            /** @type {?} */
+            componentView[TVIEW].firstChild, componentView, predicate, matches, elementsOnly, rootNativeNode);
           }
-        } else if (tNode.type === 0
+        } else {
+          if (tNode.child) {
+            // Otherwise, its children have to be processed.
+            _queryNodeChildrenR3(tNode.child, lView, predicate, matches, elementsOnly, rootNativeNode);
+          } // We also have to query the DOM directly in order to catch elements inserted through
+          // Renderer2. Note that this is __not__ optimal, because we're walking similar trees multiple
+          // times. ViewEngine could do it more efficiently, because all the insertions go through
+          // Renderer2, however that's not the case in Ivy. This approach is being used because:
+          // 1. Matching the ViewEngine behavior would mean potentially introducing a depedency
+          //    from `Renderer2` to Ivy which could bring Ivy code into ViewEngine.
+          // 2. We would have to make `Renderer3` "know" about debug nodes.
+          // 3. It allows us to capture nodes that were inserted directly via the DOM.
+
+
+          nativeNode && _queryNativeNodeDescendants(nativeNode, predicate, matches, elementsOnly);
+        } // In all cases, if a dynamic container exists for this node, each view inside it has to be
+        // processed.
+
+        /** @type {?} */
+
+
+        var nodeOrContainer = lView[tNode.index];
+
+        if (isLContainer(nodeOrContainer)) {
+          _queryNodeChildrenInContainerR3(nodeOrContainer, predicate, matches, elementsOnly, rootNativeNode);
+        }
+      } else if (tNode.type === 0
       /* Container */
       ) {
-          // Case 2: the TNode is a container
-          // The native node has to be checked.
+        // Case 2: the TNode is a container
+        // The native node has to be checked.
 
-          /** @type {?} */
-          var lContainer = lView[tNode.index];
+        /** @type {?} */
+        var lContainer = lView[tNode.index];
 
-          _addQueryMatchR3(lContainer[NATIVE], predicate, matches, elementsOnly, rootNativeNode); // Each view inside the container has to be processed.
+        _addQueryMatchR3(lContainer[NATIVE], predicate, matches, elementsOnly, rootNativeNode); // Each view inside the container has to be processed.
 
 
-          _queryNodeChildrenInContainerR3(lContainer, predicate, matches, elementsOnly, rootNativeNode);
-        } else if (tNode.type === 1
+        _queryNodeChildrenInContainerR3(lContainer, predicate, matches, elementsOnly, rootNativeNode);
+      } else if (tNode.type === 1
       /* Projection */
       ) {
-          // Case 3: the TNode is a projection insertion point (i.e. a <ng-content>).
-          // The nodes projected at this location all need to be processed.
+        // Case 3: the TNode is a projection insertion point (i.e. a <ng-content>).
+        // The nodes projected at this location all need to be processed.
 
-          /** @type {?} */
-          var _componentView =
-          /** @type {?} */
-          lView[DECLARATION_COMPONENT_VIEW];
-          /** @type {?} */
+        /** @type {?} */
+        var _componentView =
+        /** @type {?} */
+        lView[DECLARATION_COMPONENT_VIEW];
+        /** @type {?} */
 
-          var componentHost =
-          /** @type {?} */
-          _componentView[T_HOST];
-          /** @type {?} */
+        var componentHost =
+        /** @type {?} */
+        _componentView[T_HOST];
+        /** @type {?} */
 
-          var head =
-          /** @type {?} */
-          componentHost.projection[
-          /** @type {?} */
-          tNode.projection];
+        var head =
+        /** @type {?} */
+        componentHost.projection[
+        /** @type {?} */
+        tNode.projection];
 
-          if (Array.isArray(head)) {
-            var _iterator8 = _createForOfIteratorHelper(head),
-                _step8;
+        if (Array.isArray(head)) {
+          var _iterator8 = _createForOfIteratorHelper(head),
+              _step8;
 
-            try {
-              for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
-                var _nativeNode2 = _step8.value;
+          try {
+            for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+              var _nativeNode2 = _step8.value;
 
-                _addQueryMatchR3(_nativeNode2, predicate, matches, elementsOnly, rootNativeNode);
-              }
-            } catch (err) {
-              _iterator8.e(err);
-            } finally {
-              _iterator8.f();
+              _addQueryMatchR3(_nativeNode2, predicate, matches, elementsOnly, rootNativeNode);
             }
-          } else if (head) {
-            /** @type {?} */
-            var nextLView =
-            /** @type {?} */
-
-            /** @type {?} */
-            _componentView[PARENT];
-            /** @type {?} */
-
-            var nextTNode =
-            /** @type {?} */
-            nextLView[TVIEW].data[head.index];
-
-            _queryNodeChildrenR3(nextTNode, nextLView, predicate, matches, elementsOnly, rootNativeNode);
+          } catch (err) {
+            _iterator8.e(err);
+          } finally {
+            _iterator8.f();
           }
-        } else if (tNode.child) {
+        } else if (head) {
+          /** @type {?} */
+          var nextLView =
+          /** @type {?} */
+
+          /** @type {?} */
+          _componentView[PARENT];
+          /** @type {?} */
+
+          var nextTNode =
+          /** @type {?} */
+          nextLView[TVIEW].data[head.index];
+
+          _queryNodeChildrenR3(nextTNode, nextLView, predicate, matches, elementsOnly, rootNativeNode);
+        }
+      } else if (tNode.child) {
         // Case 4: the TNode is a view.
         _queryNodeChildrenR3(tNode.child, lView, predicate, matches, elementsOnly, rootNativeNode);
       } // We don't want to go to the next sibling of the root node.
@@ -64169,14 +64245,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var ApplicationModule = // Inject ApplicationRef to make it eager...
+    var ApplicationModule =
+    /*#__PURE__*/
+    _createClass2( // Inject ApplicationRef to make it eager...
 
     /**
      * @param {?} appRef
      */
     function ApplicationModule(appRef) {
       _classCallCheck(this, ApplicationModule);
-    };
+    });
 
     ApplicationModule.ɵmod = ɵɵdefineNgModule({
       type: ApplicationModule
@@ -64946,22 +65024,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (view.def.nodeFlags & 134217728
       /* TypeViewQuery */
       ) {
-          for (var _i14 = 0; _i14 < view.def.nodes.length; _i14++) {
-            /** @type {?} */
-            var _nodeDef = view.def.nodes[_i14];
+        for (var _i14 = 0; _i14 < view.def.nodes.length; _i14++) {
+          /** @type {?} */
+          var _nodeDef = view.def.nodes[_i14];
 
-            if (_nodeDef.flags & 134217728
-            /* TypeViewQuery */
-            && _nodeDef.flags & 536870912
-            /* DynamicQuery */
-            ) {
-              asQueryList(view, _i14).setDirty();
-            } // only visit the root nodes
+          if (_nodeDef.flags & 134217728
+          /* TypeViewQuery */
+          && _nodeDef.flags & 536870912
+          /* DynamicQuery */
+          ) {
+            asQueryList(view, _i14).setDirty();
+          } // only visit the root nodes
 
 
-            _i14 += _nodeDef.childCount;
-          }
+          _i14 += _nodeDef.childCount;
         }
+      }
     }
     /**
      * @param {?} view
@@ -64990,26 +65068,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (nodeDef.flags & 67108864
       /* TypeContentQuery */
       ) {
-          /** @type {?} */
-          var _elementDef =
-          /** @type {?} */
+        /** @type {?} */
+        var _elementDef =
+        /** @type {?} */
 
-          /** @type {?} */
-          nodeDef.parent.parent;
-          newValues = calcQueryValues(view, _elementDef.nodeIndex, _elementDef.nodeIndex + _elementDef.childCount,
-          /** @type {?} */
-          nodeDef.query, []);
-          directiveInstance = asProviderData(view,
-          /** @type {?} */
-          nodeDef.parent.nodeIndex).instance;
-        } else if (nodeDef.flags & 134217728
+        /** @type {?} */
+        nodeDef.parent.parent;
+        newValues = calcQueryValues(view, _elementDef.nodeIndex, _elementDef.nodeIndex + _elementDef.childCount,
+        /** @type {?} */
+        nodeDef.query, []);
+        directiveInstance = asProviderData(view,
+        /** @type {?} */
+        nodeDef.parent.nodeIndex).instance;
+      } else if (nodeDef.flags & 134217728
       /* TypeViewQuery */
       ) {
-          newValues = calcQueryValues(view, 0, view.def.nodes.length - 1,
-          /** @type {?} */
-          nodeDef.query, []);
-          directiveInstance = view.component;
-        }
+        newValues = calcQueryValues(view, 0, view.def.nodes.length - 1,
+        /** @type {?} */
+        nodeDef.query, []);
+        directiveInstance = view.component;
+      }
 
       queryList.reset(newValues);
       /** @type {?} */
@@ -65093,23 +65171,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (nodeDef.flags & 16777216
           /* EmbeddedViews */
           ) {
+            /** @type {?} */
+            var embeddedViews =
+            /** @type {?} */
+            elementData.viewContainer._embeddedViews;
+
+            for (var k = 0; k < embeddedViews.length; k++) {
               /** @type {?} */
-              var embeddedViews =
+              var embeddedView = embeddedViews[k];
               /** @type {?} */
-              elementData.viewContainer._embeddedViews;
 
-              for (var k = 0; k < embeddedViews.length; k++) {
-                /** @type {?} */
-                var embeddedView = embeddedViews[k];
-                /** @type {?} */
+              var dvc = declaredViewContainer(embeddedView);
 
-                var dvc = declaredViewContainer(embeddedView);
-
-                if (dvc && dvc === elementData) {
-                  calcQueryValues(embeddedView, 0, embeddedView.def.nodes.length - 1, queryDef, values);
-                }
+              if (dvc && dvc === elementData) {
+                calcQueryValues(embeddedView, 0, embeddedView.def.nodes.length - 1, queryDef, values);
               }
             }
+          }
           /** @type {?} */
 
 
@@ -65893,79 +65971,79 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (node.flags & 20224
         /* CatProvider */
         ) {
-            if (!currentElementHasPublicProviders) {
-              currentElementHasPublicProviders = true; // Use prototypical inheritance to not get O(n^2) complexity...
+          if (!currentElementHasPublicProviders) {
+            currentElementHasPublicProviders = true; // Use prototypical inheritance to not get O(n^2) complexity...
+
+            /** @type {?} */
+
+            /** @type {?} */
+            currentParent.element.publicProviders = Object.create(
+            /** @type {?} */
+
+            /** @type {?} */
+            currentParent.element.publicProviders);
+
+            /** @type {?} */
+
+            /** @type {?} */
+            currentParent.element.allProviders =
+            /** @type {?} */
+
+            /** @type {?} */
+            currentParent.element.publicProviders;
+          }
+          /** @type {?} */
+
+
+          var isPrivateService = (node.flags & 8192
+          /* PrivateProvider */
+          ) !== 0;
+          /** @type {?} */
+
+          var isComponent = (node.flags & 32768
+          /* Component */
+          ) !== 0;
+
+          if (!isPrivateService || isComponent) {
+            /** @type {?} */
+
+            /** @type {?} */
+
+            /** @type {?} */
+            currentParent.element.publicProviders[tokenKey(
+            /** @type {?} */
+            node.provider.token)] = node;
+          } else {
+            if (!currentElementHasPrivateProviders) {
+              currentElementHasPrivateProviders = true; // Use prototypical inheritance to not get O(n^2) complexity...
 
               /** @type {?} */
 
               /** @type {?} */
-              currentParent.element.publicProviders = Object.create(
+              currentParent.element.allProviders = Object.create(
               /** @type {?} */
 
               /** @type {?} */
               currentParent.element.publicProviders);
-
-              /** @type {?} */
-
-              /** @type {?} */
-              currentParent.element.allProviders =
-              /** @type {?} */
-
-              /** @type {?} */
-              currentParent.element.publicProviders;
             }
+
             /** @type {?} */
 
-
-            var isPrivateService = (node.flags & 8192
-            /* PrivateProvider */
-            ) !== 0;
             /** @type {?} */
 
-            var isComponent = (node.flags & 32768
-            /* Component */
-            ) !== 0;
-
-            if (!isPrivateService || isComponent) {
-              /** @type {?} */
-
-              /** @type {?} */
-
-              /** @type {?} */
-              currentParent.element.publicProviders[tokenKey(
-              /** @type {?} */
-              node.provider.token)] = node;
-            } else {
-              if (!currentElementHasPrivateProviders) {
-                currentElementHasPrivateProviders = true; // Use prototypical inheritance to not get O(n^2) complexity...
-
-                /** @type {?} */
-
-                /** @type {?} */
-                currentParent.element.allProviders = Object.create(
-                /** @type {?} */
-
-                /** @type {?} */
-                currentParent.element.publicProviders);
-              }
-
-              /** @type {?} */
-
-              /** @type {?} */
-
-              /** @type {?} */
-              currentParent.element.allProviders[tokenKey(
-              /** @type {?} */
-              node.provider.token)] = node;
-            }
-
-            if (isComponent) {
-              /** @type {?} */
-
-              /** @type {?} */
-              currentParent.element.componentProvider = node;
-            }
+            /** @type {?} */
+            currentParent.element.allProviders[tokenKey(
+            /** @type {?} */
+            node.provider.token)] = node;
           }
+
+          if (isComponent) {
+            /** @type {?} */
+
+            /** @type {?} */
+            currentParent.element.componentProvider = node;
+          }
+        }
 
         if (currentParent) {
           currentParent.childFlags |= node.flags;
@@ -66079,22 +66157,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (template.lastRenderRootNode && template.lastRenderRootNode.flags & 16777216
         /* EmbeddedViews */
         ) {
-            throw new Error("Illegal State: Last root node of a template can't have embedded views, at index ".concat(node.nodeIndex, "!"));
-          }
+          throw new Error("Illegal State: Last root node of a template can't have embedded views, at index ".concat(node.nodeIndex, "!"));
+        }
       }
 
       if (node.flags & 20224
       /* CatProvider */
       ) {
-          /** @type {?} */
-          var parentFlags = parent ? parent.flags : 0;
+        /** @type {?} */
+        var parentFlags = parent ? parent.flags : 0;
 
-          if ((parentFlags & 1
-          /* TypeElement */
-          ) === 0) {
-            throw new Error("Illegal State: StaticProvider/Directive nodes need to be children of elements or anchors, at index ".concat(node.nodeIndex, "!"));
-          }
+        if ((parentFlags & 1
+        /* TypeElement */
+        ) === 0) {
+          throw new Error("Illegal State: StaticProvider/Directive nodes need to be children of elements or anchors, at index ".concat(node.nodeIndex, "!"));
         }
+      }
 
       if (node.query) {
         if (node.flags & 67108864
@@ -66288,14 +66366,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             if (nodeDef.flags & 33554432
             /* ComponentView */
             ) {
-                /** @type {?} */
-                var compViewDef = resolveDefinition(
-                /** @type {?} */
+              /** @type {?} */
+              var compViewDef = resolveDefinition(
+              /** @type {?} */
 
-                /** @type {?} */
-                nodeDef.element.componentView);
-                componentView = Services.createComponentView(view, nodeDef, compViewDef, el);
-              }
+              /** @type {?} */
+              nodeDef.element.componentView);
+              componentView = Services.createComponentView(view, nodeDef, compViewDef, el);
+            }
 
             listenToElementOutputs(view, componentView, nodeDef, el);
             nodeData =
@@ -66312,8 +66390,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             if (nodeDef.flags & 16777216
             /* EmbeddedViews */
             ) {
-                nodeData.viewContainer = createViewContainerData(view, nodeDef, nodeData);
-              }
+              nodeData.viewContainer = createViewContainerData(view, nodeDef, nodeData);
+            }
 
             break;
 
@@ -66390,12 +66468,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               if (nodeDef.flags & 32768
               /* Component */
               ) {
-                  /** @type {?} */
-                  var compView = asElementData(view,
-                  /** @type {?} */
-                  nodeDef.parent.nodeIndex).componentView;
-                  initView(compView, nodeData.instance, nodeData.instance);
-                }
+                /** @type {?} */
+                var compView = asElementData(view,
+                /** @type {?} */
+                nodeDef.parent.nodeIndex).componentView;
+                initView(compView, nodeData.instance, nodeData.instance);
+              }
 
               break;
             }
@@ -66485,13 +66563,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (view.state & 1
       /* BeforeFirstCheck */
       ) {
-          view.state &= ~1
-          /* BeforeFirstCheck */
-          ;
-          view.state |= 2
-          /* FirstCheck */
-          ;
-        } else {
+        view.state &= ~1
+        /* BeforeFirstCheck */
+        ;
+        view.state |= 2
+        /* FirstCheck */
+        ;
+      } else {
         view.state &= ~2
         /* FirstCheck */
         ;
@@ -66551,10 +66629,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (view.def.flags & 2
       /* OnPush */
       ) {
-          view.state &= ~8
-          /* ChecksEnabled */
-          ;
-        }
+        view.state &= ~8
+        /* ChecksEnabled */
+        ;
+      }
 
       view.state &= ~(64
       /* CheckProjectedViews */
@@ -66589,8 +66667,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (argStyle === 0
       /* Inline */
       ) {
-          return checkAndUpdateNodeInline(view, nodeDef, v0, v1, v2, v3, v4, v5, v6, v7, v8, v9);
-        } else {
+        return checkAndUpdateNodeInline(view, nodeDef, v0, v1, v2, v3, v4, v5, v6, v7, v8, v9);
+      } else {
         return checkAndUpdateNodeDynamic(view, nodeDef, v0);
       }
     }
@@ -66617,20 +66695,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (nodeDef.flags & 4
         /* ProjectedTemplate */
         ) {
-            /** @type {?} */
-            var projectedViews = asElementData(view, i).template._projectedViews;
+          /** @type {?} */
+          var projectedViews = asElementData(view, i).template._projectedViews;
 
-            if (projectedViews) {
-              for (var _i17 = 0; _i17 < projectedViews.length; _i17++) {
-                /** @type {?} */
-                var projectedView = projectedViews[_i17];
-                projectedView.state |= 32
-                /* CheckProjectedView */
-                ;
-                markParentViewsForCheckProjectedViews(projectedView, view);
-              }
+          if (projectedViews) {
+            for (var _i17 = 0; _i17 < projectedViews.length; _i17++) {
+              /** @type {?} */
+              var projectedView = projectedViews[_i17];
+              projectedView.state |= 32
+              /* CheckProjectedView */
+              ;
+              markParentViewsForCheckProjectedViews(projectedView, view);
             }
-          } else if ((nodeDef.childFlags & 4
+          }
+        } else if ((nodeDef.childFlags & 4
         /* ProjectedTemplate */
         ) === 0) {
           // a parent with leafs
@@ -66755,8 +66833,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (argStyle === 0
       /* Inline */
       ) {
-          checkNoChangesNodeInline(view, nodeDef, v0, v1, v2, v3, v4, v5, v6, v7, v8, v9);
-        } else {
+        checkNoChangesNodeInline(view, nodeDef, v0, v1, v2, v3, v4, v5, v6, v7, v8, v9);
+      } else {
         checkNoChangesNodeDynamic(view, nodeDef, v0);
       } // Returning false is ok here as we would have thrown in case of a change.
 
@@ -66840,8 +66918,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (view.state & 128
       /* Destroyed */
       ) {
-          return;
-        }
+        return;
+      }
 
       execEmbeddedViewsAction(view, ViewAction.Destroy);
       execComponentViewsAction(view, ViewAction.Destroy);
@@ -66886,20 +66964,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (def.flags & 1
         /* TypeElement */
         ) {
-            /** @type {?} */
-            view.renderer.destroyNode(asElementData(view, i).renderElement);
-          } else if (def.flags & 2
+          /** @type {?} */
+          view.renderer.destroyNode(asElementData(view, i).renderElement);
+        } else if (def.flags & 2
         /* TypeText */
         ) {
-            /** @type {?} */
-            view.renderer.destroyNode(asTextData(view, i).renderText);
-          } else if (def.flags & 67108864
+          /** @type {?} */
+          view.renderer.destroyNode(asTextData(view, i).renderText);
+        } else if (def.flags & 67108864
         /* TypeContentQuery */
         || def.flags & 134217728
         /* TypeViewQuery */
         ) {
-            asQueryList(view, i).destroy();
-          }
+          asQueryList(view, i).destroy();
+        }
       }
     }
     /** @enum {number} */
@@ -66942,9 +67020,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (nodeDef.flags & 33554432
         /* ComponentView */
         ) {
-            // a leaf
-            callViewAction(asElementData(view, i).componentView, action);
-          } else if ((nodeDef.childFlags & 33554432
+          // a leaf
+          callViewAction(asElementData(view, i).componentView, action);
+        } else if ((nodeDef.childFlags & 33554432
         /* ComponentView */
         ) === 0) {
           // a parent with leafs
@@ -66978,17 +67056,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (nodeDef.flags & 16777216
         /* EmbeddedViews */
         ) {
-            // a leaf
+          // a leaf
 
-            /** @type {?} */
-            var embeddedViews =
-            /** @type {?} */
-            asElementData(view, i).viewContainer._embeddedViews;
+          /** @type {?} */
+          var embeddedViews =
+          /** @type {?} */
+          asElementData(view, i).viewContainer._embeddedViews;
 
-            for (var k = 0; k < embeddedViews.length; k++) {
-              callViewAction(embeddedViews[k], action);
-            }
-          } else if ((nodeDef.childFlags & 16777216
+          for (var k = 0; k < embeddedViews.length; k++) {
+            callViewAction(embeddedViews[k], action);
+          }
+        } else if ((nodeDef.childFlags & 16777216
         /* EmbeddedViews */
         ) === 0) {
           // a parent with leafs
@@ -67019,12 +67097,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             ) === 12
             /* CatDetectChanges */
             ) {
-                checkNoChangesView(view);
-              } else if (viewState & 64
+              checkNoChangesView(view);
+            } else if (viewState & 64
             /* CheckProjectedViews */
             ) {
-                execProjectedViewsAction(view, ViewAction.CheckNoChangesProjectedViews);
-              }
+              execProjectedViewsAction(view, ViewAction.CheckNoChangesProjectedViews);
+            }
           }
 
           break;
@@ -67036,12 +67114,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             if (viewState & 32
             /* CheckProjectedView */
             ) {
-                checkNoChangesView(view);
-              } else if (viewState & 64
+              checkNoChangesView(view);
+            } else if (viewState & 64
             /* CheckProjectedViews */
             ) {
-                execProjectedViewsAction(view, action);
-              }
+              execProjectedViewsAction(view, action);
+            }
           }
 
           break;
@@ -67055,12 +67133,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             ) === 12
             /* CatDetectChanges */
             ) {
-                checkAndUpdateView(view);
-              } else if (viewState & 64
+              checkAndUpdateView(view);
+            } else if (viewState & 64
             /* CheckProjectedViews */
             ) {
-                execProjectedViewsAction(view, ViewAction.CheckAndUpdateProjectedViews);
-              }
+              execProjectedViewsAction(view, ViewAction.CheckAndUpdateProjectedViews);
+            }
           }
 
           break;
@@ -67072,12 +67150,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             if (viewState & 32
             /* CheckProjectedView */
             ) {
-                checkAndUpdateView(view);
-              } else if (viewState & 64
+              checkAndUpdateView(view);
+            } else if (viewState & 64
             /* CheckProjectedViews */
             ) {
-                execProjectedViewsAction(view, action);
-              }
+              execProjectedViewsAction(view, action);
+            }
           }
 
           break;
@@ -67530,8 +67608,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (nodeDef.flags & 1
           /* TypeElement */
           ) {
-              lastElementDef = nodeDef;
-            }
+            lastElementDef = nodeDef;
+          }
 
           if (lastElementDef && nodeDef.flags & 3840
           /* CatProviderNoDirective */
@@ -67562,29 +67640,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (nodeDef.flags & 1
           /* TypeElement */
           ) {
-              // stop at the next element
-              return;
-            }
+            // stop at the next element
+            return;
+          }
 
           if (nodeDef.flags & 3840
           /* CatProviderNoDirective */
           ) {
-              /** @type {?} */
-              var provider =
-              /** @type {?} */
-              nodeDef.provider;
-              /** @type {?} */
+            /** @type {?} */
+            var provider =
+            /** @type {?} */
+            nodeDef.provider;
+            /** @type {?} */
 
-              var override = providerOverrides.get(provider.token);
+            var override = providerOverrides.get(provider.token);
 
-              if (override) {
-                nodeDef.flags = nodeDef.flags & ~3840
-                /* CatProviderNoDirective */
-                | override.flags;
-                provider.deps = splitDepsDsl(override.deps);
-                provider.value = override.value;
-              }
+            if (override) {
+              nodeDef.flags = nodeDef.flags & ~3840
+              /* CatProviderNoDirective */
+              | override.flags;
+              provider.deps = splitDepsDsl(override.deps);
+              provider.value = override.value;
             }
+          }
         }
       }
     } // Notes about the algorithm:
@@ -67885,8 +67963,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (view.state & 128
       /* Destroyed */
       ) {
-          throw viewDestroyedError(DebugAction[_currentAction]);
-        }
+        throw viewDestroyedError(DebugAction[_currentAction]);
+      }
 
       debugSetCurrentNode(view, nextDirectiveWithBinding(view, 0));
       return view.def.updateDirectives(debugCheckDirectivesFn, view);
@@ -67909,16 +67987,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (checkType === 0
         /* CheckAndUpdate */
         ) {
-            debugCheckAndUpdateNode(view, nodeDef, argStyle, values);
-          } else {
+          debugCheckAndUpdateNode(view, nodeDef, argStyle, values);
+        } else {
           debugCheckNoChangesNode(view, nodeDef, argStyle, values);
         }
 
         if (nodeDef.flags & 16384
         /* TypeDirective */
         ) {
-            debugSetCurrentNode(view, nextDirectiveWithBinding(view, nodeIndex));
-          }
+          debugSetCurrentNode(view, nextDirectiveWithBinding(view, nodeIndex));
+        }
 
         return nodeDef.flags & 224
         /* CatPureExpression */
@@ -67936,8 +68014,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       if (view.state & 128
       /* Destroyed */
       ) {
-          throw viewDestroyedError(DebugAction[_currentAction]);
-        }
+        throw viewDestroyedError(DebugAction[_currentAction]);
+      }
 
       debugSetCurrentNode(view, nextRenderNodeWithBinding(view, 0));
       return view.def.updateRenderer(debugCheckRenderNodeFn, view);
@@ -67960,16 +68038,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (checkType === 0
         /* CheckAndUpdate */
         ) {
-            debugCheckAndUpdateNode(view, nodeDef, argStyle, values);
-          } else {
+          debugCheckAndUpdateNode(view, nodeDef, argStyle, values);
+        } else {
           debugCheckNoChangesNode(view, nodeDef, argStyle, values);
         }
 
         if (nodeDef.flags & 3
         /* CatRenderNode */
         ) {
-            debugSetCurrentNode(view, nextRenderNodeWithBinding(view, nodeIndex));
-          }
+          debugSetCurrentNode(view, nextRenderNodeWithBinding(view, nodeIndex));
+        }
 
         return nodeDef.flags & 224
         /* CatPureExpression */
@@ -68000,53 +68078,53 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (nodeDef.flags & 16384
         /* TypeDirective */
         ) {
+          /** @type {?} */
+          var bindingValues = {};
+
+          for (var i = 0; i < nodeDef.bindings.length; i++) {
             /** @type {?} */
-            var bindingValues = {};
+            var binding = nodeDef.bindings[i];
+            /** @type {?} */
 
-            for (var i = 0; i < nodeDef.bindings.length; i++) {
+            var value = values[i];
+
+            if (binding.flags & 8
+            /* TypeProperty */
+            ) {
+              bindingValues[normalizeDebugBindingName(
               /** @type {?} */
-              var binding = nodeDef.bindings[i];
-              /** @type {?} */
-
-              var value = values[i];
-
-              if (binding.flags & 8
-              /* TypeProperty */
-              ) {
-                  bindingValues[normalizeDebugBindingName(
-                  /** @type {?} */
-                  binding.nonMinifiedName)] = normalizeDebugBindingValue(value);
-                }
+              binding.nonMinifiedName)] = normalizeDebugBindingValue(value);
             }
-            /** @type {?} */
+          }
+          /** @type {?} */
 
 
-            var elDef =
-            /** @type {?} */
-            nodeDef.parent;
-            /** @type {?} */
+          var elDef =
+          /** @type {?} */
+          nodeDef.parent;
+          /** @type {?} */
 
-            var el = asElementData(view, elDef.nodeIndex).renderElement;
+          var el = asElementData(view, elDef.nodeIndex).renderElement;
 
-            if (!
-            /** @type {?} */
-            elDef.element.name) {
-              // a comment.
-              view.renderer.setValue(el, escapeCommentText("bindings=".concat(JSON.stringify(bindingValues, null, 2))));
-            } else {
-              // a regular element.
-              for (var attr in bindingValues) {
-                /** @type {?} */
-                var _value3 = bindingValues[attr];
+          if (!
+          /** @type {?} */
+          elDef.element.name) {
+            // a comment.
+            view.renderer.setValue(el, escapeCommentText("bindings=".concat(JSON.stringify(bindingValues, null, 2))));
+          } else {
+            // a regular element.
+            for (var attr in bindingValues) {
+              /** @type {?} */
+              var _value3 = bindingValues[attr];
 
-                if (_value3 != null) {
-                  view.renderer.setAttribute(el, attr, _value3);
-                } else {
-                  view.renderer.removeAttribute(el, attr);
-                }
+              if (_value3 != null) {
+                view.renderer.setAttribute(el, attr, _value3);
+              } else {
+                view.renderer.removeAttribute(el, attr);
               }
             }
           }
+        }
       }
     }
     /**
@@ -68209,10 +68287,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               if (childDef.flags & 20224
               /* CatProvider */
               ) {
-                  tokens.push(
-                  /** @type {?} */
-                  childDef.provider.token);
-                }
+                tokens.push(
+                /** @type {?} */
+                childDef.provider.token);
+              }
 
               i += childDef.childCount;
             }
@@ -68240,8 +68318,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               if (childDef.flags & 20224
               /* CatProvider */
               ) {
-                  collectReferences(this.elView, childDef, references);
-                }
+                collectReferences(this.elView, childDef, references);
+              }
 
               i += childDef.childCount;
             }
@@ -68293,9 +68371,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (this.nodeDef.flags & 2
           /* TypeText */
           ) {
-              logViewDef = this.view.def;
-              logNodeIndex = this.nodeDef.nodeIndex;
-            } else {
+            logViewDef = this.view.def;
+            logNodeIndex = this.nodeDef.nodeIndex;
+          } else {
             logViewDef = this.elView.def;
             logNodeIndex = this.elDef.nodeIndex;
           } // Note: we only generate a log function for text and element nodes
@@ -68360,8 +68438,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (nodeDef.flags & 3
         /* CatRenderNode */
         ) {
-            renderNodeIndex++;
-          }
+          renderNodeIndex++;
+        }
       }
 
       return renderNodeIndex;
@@ -70749,7 +70827,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return _super31.call(this, cd);
       }
 
-      return NgControlStatus;
+      return _createClass2(NgControlStatus);
     }(AbstractControlStatus);
 
     NgControlStatus.ɵfac = function NgControlStatus_Factory(t) {
@@ -70825,7 +70903,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return _super32.call(this, cd);
       }
 
-      return NgControlStatusGroup;
+      return _createClass2(NgControlStatusGroup);
     }(AbstractControlStatus);
 
     NgControlStatusGroup.ɵfac = function NgControlStatusGroup_Factory(t) {
@@ -73087,9 +73165,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var HTMLCollection = function HTMLCollection() {
+    var HTMLCollection =
+    /*#__PURE__*/
+    _createClass2(function HTMLCollection() {
       _classCallCheck(this, HTMLCollection);
-    };
+    });
 
     if (false) {}
     /**
@@ -73287,23 +73367,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             } // Degrade on IE
             else {
-                /** @type {?} */
-                var _options =
-                /** @type {?} */
-                _.options;
+              /** @type {?} */
+              var _options =
+              /** @type {?} */
+              _.options;
 
-                for (var _i21 = 0; _i21 < _options.length; _i21++) {
+              for (var _i21 = 0; _i21 < _options.length; _i21++) {
+                /** @type {?} */
+                var _opt = _options.item(_i21);
+
+                if (_opt.selected) {
                   /** @type {?} */
-                  var _opt = _options.item(_i21);
+                  var _val = _this55._getOptionValue(_opt.value);
 
-                  if (_opt.selected) {
-                    /** @type {?} */
-                    var _val = _this55._getOptionValue(_opt.value);
-
-                    selected.push(_val);
-                  }
+                  selected.push(_val);
                 }
               }
+            }
 
             _this55.value = selected;
             fn(selected);
@@ -78526,9 +78606,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var ɵNgNoValidate = function ɵNgNoValidate() {
+    var ɵNgNoValidate =
+    /*#__PURE__*/
+    _createClass2(function ɵNgNoValidate() {
       _classCallCheck(this, ɵNgNoValidate);
-    };
+    });
 
     ɵNgNoValidate.ɵfac = function ɵNgNoValidate_Factory(t) {
       return new (t || ɵNgNoValidate)();
@@ -81325,9 +81407,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * Internal module used for sharing directives between FormsModule and ReactiveFormsModule
      */
 
-    var ɵInternalFormsSharedModule = function ɵInternalFormsSharedModule() {
+    var ɵInternalFormsSharedModule =
+    /*#__PURE__*/
+    _createClass2(function ɵInternalFormsSharedModule() {
       _classCallCheck(this, ɵInternalFormsSharedModule);
-    };
+    });
 
     ɵInternalFormsSharedModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({
       type: ɵInternalFormsSharedModule
@@ -81618,9 +81702,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * \@publicApi
      */
 
-    var FormsModule = function FormsModule() {
+    var FormsModule =
+    /*#__PURE__*/
+    _createClass2(function FormsModule() {
       _classCallCheck(this, FormsModule);
-    };
+    });
 
     FormsModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({
       type: FormsModule
@@ -84714,9 +84800,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * \@publicApi
      */
 
-    var HammerModule = function HammerModule() {
+    var HammerModule =
+    /*#__PURE__*/
+    _createClass2(function HammerModule() {
       _classCallCheck(this, HammerModule);
-    };
+    });
 
     HammerModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineNgModule"]({
       type: HammerModule
@@ -85213,9 +85301,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var DomSanitizer = function DomSanitizer() {
+    var DomSanitizer =
+    /*#__PURE__*/
+    _createClass2(function DomSanitizer() {
       _classCallCheck(this, DomSanitizer);
-    };
+    });
 
     DomSanitizer.ɵfac = function DomSanitizer_Factory(t) {
       return new (t || DomSanitizer)();
@@ -86112,6 +86202,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
     var ChangeDetectionPerfRecord =
+    /*#__PURE__*/
+    _createClass2(
     /**
      * @param {?} msPerTick
      * @param {?} numTicks
@@ -86121,7 +86213,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       this.msPerTick = msPerTick;
       this.numTicks = numTicks;
-    };
+    });
 
     if (false) {}
     /**
@@ -86517,9 +86609,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 
 
-    var BrowserTransferStateModule = function BrowserTransferStateModule() {
+    var BrowserTransferStateModule =
+    /*#__PURE__*/
+    _createClass2(function BrowserTransferStateModule() {
       _classCallCheck(this, BrowserTransferStateModule);
-    };
+    });
 
     BrowserTransferStateModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineNgModule"]({
       type: BrowserTransferStateModule
@@ -86994,7 +87088,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   /***/
   function node_modulesMomentLocaleArLyJs(module, exports, __webpack_require__) {
     //! moment.js locale configuration
-    //! locale : Arabic (Lybia) [ar-ly]
+    //! locale : Arabic (Libya) [ar-ly]
     //! author : Ali Hmer: https://github.com/kikoanis
     ;
 
@@ -88859,7 +88953,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     })(this, function (moment) {
       'use strict'; //! moment.js locale configuration
 
-      var months = 'leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec'.split('_'),
+      var months = {
+        format: 'leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec'.split('_'),
+        standalone: 'ledna_února_března_dubna_května_června_července_srpna_září_října_listopadu_prosince'.split('_')
+      },
           monthsShort = 'led_úno_bře_dub_kvě_čvn_čvc_srp_zář_říj_lis_pro'.split('_'),
           monthsParse = [/^led/i, /^úno/i, /^bře/i, /^dub/i, /^kvě/i, /^(čvn|červen$|června)/i, /^(čvc|červenec|července)/i, /^srp/i, /^zář/i, /^říj/i, /^lis/i, /^pro/i],
           // NOTE: 'červen' is substring of 'červenec'; therefore 'červenec' must precede 'červen' in the regex to be fully matched.
@@ -98588,25 +98685,41 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         words: {
           //Different grammatical cases
           ss: ['секунда', 'секунде', 'секунди'],
-          m: ['један минут', 'једне минуте'],
-          mm: ['минут', 'минуте', 'минута'],
+          m: ['један минут', 'једног минута'],
+          mm: ['минут', 'минута', 'минута'],
           h: ['један сат', 'једног сата'],
           hh: ['сат', 'сата', 'сати'],
+          d: ['један дан', 'једног дана'],
           dd: ['дан', 'дана', 'дана'],
+          M: ['један месец', 'једног месеца'],
           MM: ['месец', 'месеца', 'месеци'],
-          yy: ['година', 'године', 'година']
+          y: ['једну годину', 'једне године'],
+          yy: ['годину', 'године', 'година']
         },
         correctGrammaticalCase: function correctGrammaticalCase(number, wordKey) {
-          return number === 1 ? wordKey[0] : number >= 2 && number <= 4 ? wordKey[1] : wordKey[2];
+          if (number % 10 >= 1 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)) {
+            return number % 10 === 1 ? wordKey[0] : wordKey[1];
+          }
+
+          return wordKey[2];
         },
-        translate: function translate(number, withoutSuffix, key) {
-          var wordKey = translator.words[key];
+        translate: function translate(number, withoutSuffix, key, isFuture) {
+          var wordKey = translator.words[key],
+              word;
 
           if (key.length === 1) {
-            return withoutSuffix ? wordKey[0] : wordKey[1];
-          } else {
-            return number + ' ' + translator.correctGrammaticalCase(number, wordKey);
+            // Nominativ
+            if (key === 'y' && withoutSuffix) return 'једна година';
+            return isFuture || withoutSuffix ? wordKey[0] : wordKey[1];
           }
+
+          word = translator.correctGrammaticalCase(number, wordKey); // Nominativ
+
+          if (key === 'yy' && withoutSuffix && word === 'годину') {
+            return number + ' година';
+          }
+
+          return number + ' ' + word;
         }
       };
       var srCyrl = moment.defineLocale('sr-cyrl', {
@@ -98662,11 +98775,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           mm: translator.translate,
           h: translator.translate,
           hh: translator.translate,
-          d: 'дан',
+          d: translator.translate,
           dd: translator.translate,
-          M: 'месец',
+          M: translator.translate,
           MM: translator.translate,
-          y: 'годину',
+          y: translator.translate,
           yy: translator.translate
         },
         dayOfMonthOrdinalParse: /\d{1,2}\./,
@@ -98711,25 +98824,41 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         words: {
           //Different grammatical cases
           ss: ['sekunda', 'sekunde', 'sekundi'],
-          m: ['jedan minut', 'jedne minute'],
-          mm: ['minut', 'minute', 'minuta'],
+          m: ['jedan minut', 'jednog minuta'],
+          mm: ['minut', 'minuta', 'minuta'],
           h: ['jedan sat', 'jednog sata'],
           hh: ['sat', 'sata', 'sati'],
+          d: ['jedan dan', 'jednog dana'],
           dd: ['dan', 'dana', 'dana'],
+          M: ['jedan mesec', 'jednog meseca'],
           MM: ['mesec', 'meseca', 'meseci'],
-          yy: ['godina', 'godine', 'godina']
+          y: ['jednu godinu', 'jedne godine'],
+          yy: ['godinu', 'godine', 'godina']
         },
         correctGrammaticalCase: function correctGrammaticalCase(number, wordKey) {
-          return number === 1 ? wordKey[0] : number >= 2 && number <= 4 ? wordKey[1] : wordKey[2];
+          if (number % 10 >= 1 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)) {
+            return number % 10 === 1 ? wordKey[0] : wordKey[1];
+          }
+
+          return wordKey[2];
         },
-        translate: function translate(number, withoutSuffix, key) {
-          var wordKey = translator.words[key];
+        translate: function translate(number, withoutSuffix, key, isFuture) {
+          var wordKey = translator.words[key],
+              word;
 
           if (key.length === 1) {
-            return withoutSuffix ? wordKey[0] : wordKey[1];
-          } else {
-            return number + ' ' + translator.correctGrammaticalCase(number, wordKey);
+            // Nominativ
+            if (key === 'y' && withoutSuffix) return 'jedna godina';
+            return isFuture || withoutSuffix ? wordKey[0] : wordKey[1];
           }
+
+          word = translator.correctGrammaticalCase(number, wordKey); // Nominativ
+
+          if (key === 'yy' && withoutSuffix && word === 'godinu') {
+            return number + ' godina';
+          }
+
+          return number + ' ' + word;
         }
       };
       var sr = moment.defineLocale('sr', {
@@ -98785,11 +98914,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           mm: translator.translate,
           h: translator.translate,
           hh: translator.translate,
-          d: 'dan',
+          d: translator.translate,
           dd: translator.translate,
-          M: 'mesec',
+          M: translator.translate,
           MM: translator.translate,
-          y: 'godinu',
+          y: translator.translate,
           yy: translator.translate
         },
         dayOfMonthOrdinalParse: /\d{1,2}\./,
@@ -99986,7 +100115,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         months: 'Ocak_Şubat_Mart_Nisan_Mayıs_Haziran_Temmuz_Ağustos_Eylül_Ekim_Kasım_Aralık'.split('_'),
         monthsShort: 'Oca_Şub_Mar_Nis_May_Haz_Tem_Ağu_Eyl_Eki_Kas_Ara'.split('_'),
         weekdays: 'Pazar_Pazartesi_Salı_Çarşamba_Perşembe_Cuma_Cumartesi'.split('_'),
-        weekdaysShort: 'Paz_Pts_Sal_Çar_Per_Cum_Cts'.split('_'),
+        weekdaysShort: 'Paz_Pzt_Sal_Çar_Per_Cum_Cmt'.split('_'),
         weekdaysMin: 'Pz_Pt_Sa_Ça_Pe_Cu_Ct'.split('_'),
         meridiem: function meridiem(hours, minutes, isLower) {
           if (hours < 12) {
@@ -101638,7 +101767,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* WEBPACK VAR INJECTION */
     (function (module) {
       var require; //! moment.js
-      //! version : 2.29.1
+      //! version : 2.29.4
       //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
       //! license : MIT
       //! momentjs.com
@@ -101707,9 +101836,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         function map(arr, fn) {
           var res = [],
-              i;
+              i,
+              arrLen = arr.length;
 
-          for (i = 0; i < arr.length; ++i) {
+          for (i = 0; i < arrLen; ++i) {
             res.push(fn(arr[i], i));
           }
 
@@ -101828,7 +101958,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             updateInProgress = false;
 
         function copyConfig(to, from) {
-          var i, prop, val;
+          var i,
+              prop,
+              val,
+              momentPropertiesLen = momentProperties.length;
 
           if (!isUndefined(from._isAMomentObject)) {
             to._isAMomentObject = from._isAMomentObject;
@@ -101870,8 +102003,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             to._locale = from._locale;
           }
 
-          if (momentProperties.length > 0) {
-            for (i = 0; i < momentProperties.length; i++) {
+          if (momentPropertiesLen > 0) {
+            for (i = 0; i < momentPropertiesLen; i++) {
               prop = momentProperties[i];
               val = from[prop];
 
@@ -101923,9 +102056,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               var args = [],
                   arg,
                   i,
-                  key;
+                  key,
+                  argLen = arguments.length;
 
-              for (i = 0; i < arguments.length; i++) {
+              for (i = 0; i < argLen; i++) {
                 arg = '';
 
                 if (typeof arguments[i] === 'object') {
@@ -102355,9 +102489,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (typeof units === 'object') {
             units = normalizeObjectUnits(units);
             var prioritized = getPrioritizedUnits(units),
-                i;
+                i,
+                prioritizedLen = prioritized.length;
 
-            for (i = 0; i < prioritized.length; i++) {
+            for (i = 0; i < prioritizedLen; i++) {
               this[prioritized[i].unit](units[prioritized[i].unit]);
             }
           } else {
@@ -102438,7 +102573,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         function addParseToken(token, callback) {
           var i,
-              func = callback;
+              func = callback,
+              tokenLen;
 
           if (typeof token === 'string') {
             token = [token];
@@ -102450,7 +102586,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             };
           }
 
-          for (i = 0; i < token.length; i++) {
+          tokenLen = token.length;
+
+          for (i = 0; i < tokenLen; i++) {
             tokens[token[i]] = func;
           }
         }
@@ -103536,11 +103674,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return globalLocale;
         }
 
+        function isLocaleNameSane(name) {
+          // Prevent names that look like filesystem paths, i.e contain '/' or '\'
+          return name.match('^[^/\\\\]*$') != null;
+        }
+
         function loadLocale(name) {
           var oldLocale = null,
               aliasedRequire; // TODO: Find a better way to register and load all the locales in Node
 
-          if (locales[name] === undefined && typeof module !== 'undefined' && module && module.exports) {
+          if (locales[name] === undefined && typeof module !== 'undefined' && module && module.exports && isLocaleNameSane(name)) {
             try {
               oldLocale = globalLocale._abbr;
               aliasedRequire = require;
@@ -103774,12 +103917,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               allowTime,
               dateFormat,
               timeFormat,
-              tzFormat;
+              tzFormat,
+              isoDatesLen = isoDates.length,
+              isoTimesLen = isoTimes.length;
 
           if (match) {
             getParsingFlags(config).iso = true;
 
-            for (i = 0, l = isoDates.length; i < l; i++) {
+            for (i = 0, l = isoDatesLen; i < l; i++) {
               if (isoDates[i][1].exec(match[1])) {
                 dateFormat = isoDates[i][0];
                 allowTime = isoDates[i][2] !== false;
@@ -103793,7 +103938,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             if (match[3]) {
-              for (i = 0, l = isoTimes.length; i < l; i++) {
+              for (i = 0, l = isoTimesLen; i < l; i++) {
                 if (isoTimes[i][1].exec(match[3])) {
                   // match[2] should be 'T' or space
                   timeFormat = (match[2] || ' ') + isoTimes[i][0];
@@ -103852,7 +103997,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         function preprocessRFC2822(s) {
           // Remove comments and folding whitespace and replace multiple-spaces with a single space
-          return s.replace(/\([^)]*\)|[\n\t]/g, ' ').replace(/(\s\s+)/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+          return s.replace(/\([^()]*\)|[\n\t]/g, ' ').replace(/(\s\s+)/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');
         }
 
         function checkWeekday(weekdayStr, parsedInput, config) {
@@ -104129,10 +104274,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               skipped,
               stringLength = string.length,
               totalParsedInputLength = 0,
-              era;
+              era,
+              tokenLen;
           tokens = expandFormat(config._f, config._locale).match(formattingTokens) || [];
+          tokenLen = tokens.length;
 
-          for (i = 0; i < tokens.length; i++) {
+          for (i = 0; i < tokenLen; i++) {
             token = tokens[i];
             parsedInput = (string.match(getParseRegexForToken(token, config)) || [])[0];
 
@@ -104225,15 +104372,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               i,
               currentScore,
               validFormatFound,
-              bestFormatIsValid = false;
+              bestFormatIsValid = false,
+              configfLen = config._f.length;
 
-          if (config._f.length === 0) {
+          if (configfLen === 0) {
             getParsingFlags(config).invalidFormat = true;
             config._d = new Date(NaN);
             return;
           }
 
-          for (i = 0; i < config._f.length; i++) {
+          for (i = 0; i < configfLen; i++) {
             currentScore = 0;
             validFormatFound = false;
             tempConfig = copyConfig({}, config);
@@ -104455,7 +104603,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         function isDurationValid(m) {
           var key,
               unitHasDecimal = false,
-              i;
+              i,
+              orderLen = ordering.length;
 
           for (key in m) {
             if (hasOwnProp(m, key) && !(indexOf.call(ordering, key) !== -1 && (m[key] == null || !isNaN(m[key])))) {
@@ -104463,7 +104612,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
           }
 
-          for (i = 0; i < ordering.length; ++i) {
+          for (i = 0; i < orderLen; ++i) {
             if (m[ordering[i]]) {
               if (unitHasDecimal) {
                 return false; // only allow non-integers for smallest unit
@@ -104951,9 +105100,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               propertyTest = false,
               properties = ['years', 'year', 'y', 'months', 'month', 'M', 'days', 'day', 'd', 'dates', 'date', 'D', 'hours', 'hour', 'h', 'minutes', 'minute', 'm', 'seconds', 'second', 's', 'milliseconds', 'millisecond', 'ms'],
               i,
-              property;
+              property,
+              propertyLen = properties.length;
 
-          for (i = 0; i < properties.length; i += 1) {
+          for (i = 0; i < propertyLen; i += 1) {
             property = properties[i];
             propertyTest = propertyTest || hasOwnProp(input, property);
           }
@@ -106695,7 +106845,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           config._d = new Date(toInt(input));
         }); //! moment.js
 
-        hooks.version = '2.29.1';
+        hooks.version = '2.29.4';
         setHookCallback(createLocal);
         hooks.fn = proto;
         hooks.min = min;
@@ -107898,7 +108048,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var Observable =
     /*#__PURE__*/
-    function () {
+    function (_symbol_observable__W) {
       function Observable(subscribe) {
         _classCallCheck(this, Observable);
 
@@ -107987,7 +108137,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return source && source.subscribe(subscriber);
         }
       }, {
-        key: _symbol_observable__WEBPACK_IMPORTED_MODULE_2__["observable"],
+        key: _symbol_observable__W,
         value: function value() {
           return this;
         }
@@ -108025,7 +108175,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }]);
 
       return Observable;
-    }();
+    }(_symbol_observable__WEBPACK_IMPORTED_MODULE_2__["observable"]);
 
     Observable.create = function (subscribe) {
       return new Observable(subscribe);
@@ -108350,12 +108500,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       return ReplaySubject;
     }(_Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"]);
 
-    var ReplayEvent = function ReplayEvent(time, value) {
+    var ReplayEvent =
+    /*#__PURE__*/
+    _createClass2(function ReplayEvent(time, value) {
       _classCallCheck(this, ReplayEvent);
 
       this.time = time;
       this.value = value;
-    }; //# sourceMappingURL=ReplaySubject.js.map
+    }); //# sourceMappingURL=ReplaySubject.js.map
 
     /***/
 
@@ -108498,12 +108650,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return _this108;
       }
 
-      return SubjectSubscriber;
+      return _createClass2(SubjectSubscriber);
     }(_Subscriber__WEBPACK_IMPORTED_MODULE_1__["Subscriber"]);
 
     var Subject =
     /*#__PURE__*/
-    function (_Observable__WEBPACK_) {
+    function (_Observable__WEBPACK_, _internal_symbol_rxSu) {
       _inherits(Subject, _Observable__WEBPACK_);
 
       var _super61 = _createSuper(Subject);
@@ -108523,7 +108675,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       _createClass2(Subject, [{
-        key: _internal_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_5__["rxSubscriber"],
+        key: _internal_symbol_rxSu,
         value: function value() {
           return new SubjectSubscriber(this);
         }
@@ -108631,7 +108783,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }]);
 
       return Subject;
-    }(_Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"]);
+    }(_Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"], _internal_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_5__["rxSubscriber"]);
 
     Subject.create = function (destination, source) {
       return new AnonymousSubject(destination, source);
@@ -108842,7 +108994,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var Subscriber =
     /*#__PURE__*/
-    function (_Subscription__WEBPAC2) {
+    function (_Subscription__WEBPAC2, _internal_symbol_rxSu2) {
       _inherits(Subscriber, _Subscription__WEBPAC2);
 
       var _super64 = _createSuper(Subscriber);
@@ -108892,7 +109044,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       _createClass2(Subscriber, [{
-        key: _internal_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_3__["rxSubscriber"],
+        key: _internal_symbol_rxSu2,
         value: function value() {
           return this;
         }
@@ -108970,7 +109122,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }]);
 
       return Subscriber;
-    }(_Subscription__WEBPACK_IMPORTED_MODULE_2__["Subscription"]);
+    }(_Subscription__WEBPACK_IMPORTED_MODULE_2__["Subscription"], _internal_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_3__["rxSubscriber"]);
 
     var SafeSubscriber =
     /*#__PURE__*/
@@ -112420,7 +112572,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var StaticArrayIterator =
     /*#__PURE__*/
-    function () {
+    function (_internal_symbol_iter) {
       function StaticArrayIterator(array) {
         _classCallCheck(this, StaticArrayIterator);
 
@@ -112431,7 +112583,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       _createClass2(StaticArrayIterator, [{
-        key: _internal_symbol_iterator__WEBPACK_IMPORTED_MODULE_5__["iterator"],
+        key: _internal_symbol_iter,
         value: function value() {
           return this;
         }
@@ -112461,11 +112613,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }]);
 
       return StaticArrayIterator;
-    }();
+    }(_internal_symbol_iterator__WEBPACK_IMPORTED_MODULE_5__["iterator"]);
 
     var ZipBufferIterator =
     /*#__PURE__*/
-    function (_OuterSubscriber__WEB3) {
+    function (_OuterSubscriber__WEB3, _internal_symbol_iter2) {
       _inherits(ZipBufferIterator, _OuterSubscriber__WEB3);
 
       var _super73 = _createSuper(ZipBufferIterator);
@@ -112485,7 +112637,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       _createClass2(ZipBufferIterator, [{
-        key: _internal_symbol_iterator__WEBPACK_IMPORTED_MODULE_5__["iterator"],
+        key: _internal_symbol_iter2,
         value: function value() {
           return this;
         }
@@ -112540,7 +112692,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }]);
 
       return ZipBufferIterator;
-    }(_OuterSubscriber__WEBPACK_IMPORTED_MODULE_3__["OuterSubscriber"]); //# sourceMappingURL=zip.js.map
+    }(_OuterSubscriber__WEBPACK_IMPORTED_MODULE_3__["OuterSubscriber"], _internal_symbol_iterator__WEBPACK_IMPORTED_MODULE_5__["iterator"]); //# sourceMappingURL=zip.js.map
 
     /***/
 
@@ -113089,11 +113241,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       return BufferTimeOperator;
     }();
 
-    var Context = function Context() {
+    var Context =
+    /*#__PURE__*/
+    _createClass2(function Context() {
       _classCallCheck(this, Context);
 
       this.buffer = [];
-    };
+    });
 
     var BufferTimeSubscriber =
     /*#__PURE__*/
@@ -114647,12 +114801,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       return DelaySubscriber;
     }(_Subscriber__WEBPACK_IMPORTED_MODULE_2__["Subscriber"]);
 
-    var DelayMessage = function DelayMessage(time, notification) {
+    var DelayMessage =
+    /*#__PURE__*/
+    _createClass2(function DelayMessage(time, notification) {
       _classCallCheck(this, DelayMessage);
 
       this.time = time;
       this.notification = notification;
-    }; //# sourceMappingURL=delay.js.map
+    }); //# sourceMappingURL=delay.js.map
 
     /***/
 
@@ -116172,7 +116328,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return _this148;
       }
 
-      return FinallySubscriber;
+      return _createClass2(FinallySubscriber);
     }(_Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"]); //# sourceMappingURL=finalize.js.map
 
     /***/
@@ -118076,12 +118232,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       return ObserveOnSubscriber;
     }(_Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"]);
 
-    var ObserveOnMessage = function ObserveOnMessage(notification, destination) {
+    var ObserveOnMessage =
+    /*#__PURE__*/
+    _createClass2(function ObserveOnMessage(notification, destination) {
       _classCallCheck(this, ObserveOnMessage);
 
       this.notification = notification;
       this.destination = destination;
-    }; //# sourceMappingURL=observeOn.js.map
+    }); //# sourceMappingURL=observeOn.js.map
 
     /***/
 
@@ -122121,12 +122279,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       };
     }
 
-    var TimeInterval = function TimeInterval(value, interval) {
+    var TimeInterval =
+    /*#__PURE__*/
+    _createClass2(function TimeInterval(value, interval) {
       _classCallCheck(this, TimeInterval);
 
       this.value = value;
       this.interval = interval;
-    }; //# sourceMappingURL=timeInterval.js.map
+    }); //# sourceMappingURL=timeInterval.js.map
 
     /***/
 
@@ -122374,12 +122534,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       });
     }
 
-    var Timestamp = function Timestamp(value, timestamp) {
+    var Timestamp =
+    /*#__PURE__*/
+    _createClass2(function Timestamp(value, timestamp) {
       _classCallCheck(this, Timestamp);
 
       this.value = value;
       this.timestamp = timestamp;
-    }; //# sourceMappingURL=timestamp.js.map
+    }); //# sourceMappingURL=timestamp.js.map
 
     /***/
 
@@ -124755,7 +124917,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return _super154.apply(this, arguments);
       }
 
-      return QueueScheduler;
+      return _createClass2(QueueScheduler);
     }(_AsyncScheduler__WEBPACK_IMPORTED_MODULE_0__["AsyncScheduler"]); //# sourceMappingURL=QueueScheduler.js.map
 
     /***/

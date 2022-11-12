@@ -18,7 +18,7 @@ import { ReproductorComponent } from './components/reproductor/reproductor.compo
     CancionComponent,
     ListadoCancionesComponent,
     FiltroPipe,
-    ReproductorComponent
+    ReproductorComponent,
   ],
   imports: [
     BrowserModule,

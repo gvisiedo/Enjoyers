@@ -1,10 +1,9 @@
 {
   "name": "enjoyers",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+ 
+
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -12,16 +11,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gvisiedo/Enjoyers.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/gvisiedo/Enjoyers/issues"
-  },
-  "homepage": "https://github.com/gvisiedo/Enjoyers#readme",
+
   "dependencies": {
     "@angular/animations": "^9.1.13",
     "@angular/cdk": "^9.2.4",
